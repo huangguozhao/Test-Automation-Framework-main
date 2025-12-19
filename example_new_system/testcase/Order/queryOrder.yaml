@@ -1,0 +1,28 @@
+- baseInfo:
+    api_name: 查询订单
+    url: /api/v1/orders/${get_extract_data(orderId)}
+    method: GET
+    header:
+      Authorization: Bearer ${get_extract_data(token)}
+  testCase:
+    - case_name: 查询已创建的订单
+      validation:
+        - eq: { 'code': 0 }
+        - contains: { 'data.orderId': '${get_extract_data(orderId)}' }
+        - eq: { 'data.status': 'pending' }
+
+- baseInfo:
+    api_name: 查询订单列表
+    url: /api/v1/orders
+    method: GET
+    header:
+      Authorization: Bearer ${get_extract_data(token)}
+  testCase:
+    - case_name: 查询用户订单列表
+      params:
+        userId: ${get_extract_data(userId)}
+        page: 1
+        size: 10
+      validation:
+        - eq: { 'code': 0 }
+        - contains: { 'message': '查询成功' }

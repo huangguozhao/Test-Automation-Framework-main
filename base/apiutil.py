@@ -3,7 +3,46 @@ import re
 from json.decoder import JSONDecodeError
 
 import allure
-import jsonpath
+
+# Fix jsonpath compatibility issue
+try:
+    import jsonpath
+    # Test if jsonpath.jsonpath method exists
+    if not hasattr(jsonpath, 'jsonpath'):
+        raise ImportError("jsonpath.jsonpath method not found")
+except (ImportError, AttributeError):
+    try:
+        # Try jsonpath-ng as alternative
+        from jsonpath_ng import parse
+        class JsonPathCompat:
+            @staticmethod
+            def jsonpath(data, path):
+                try:
+                    # Convert JSONPath expression to jsonpath-ng format
+                    if path.startswith('$..'):
+                        path = path[3:]  # Remove $.. prefix
+                    elif path.startswith('$.'):
+                        path = path[2:]  # Remove $. prefix
+                    jsonpath_expr = parse(path)
+                    matches = [match.value for match in jsonpath_expr.find(data)]
+                    return matches if matches else False
+                except:
+                    return False
+        jsonpath = JsonPathCompat()
+    except ImportError:
+        # Fallback: create a simple jsonpath implementation
+        class JsonPathCompat:
+            @staticmethod
+            def jsonpath(data, path):
+                try:
+                    if path.startswith('$..') or path.startswith('$.'):
+                        key = path[3:] if path.startswith('$..') else path[2:]
+                        if isinstance(data, dict) and key in data:
+                            return [data[key]]
+                    return False
+                except:
+                    return False
+        jsonpath = JsonPathCompat()
 
 from common.assertions import Assertions
 from common.debugtalk import DebugTalk

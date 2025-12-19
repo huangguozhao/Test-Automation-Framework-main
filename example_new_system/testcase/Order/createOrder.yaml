@@ -1,0 +1,38 @@
+- baseInfo:
+    api_name: 创建订单
+    url: /api/v1/orders
+    method: POST
+    header:
+      Content-Type: application/json
+      Authorization: Bearer ${get_extract_data(token)}
+  testCase:
+    - case_name: 正常创建订单
+      json:
+        productId: "12345"
+        quantity: 2
+        price: 99.99
+        userId: ${get_extract_data(userId)}
+      validation:
+        - eq: { 'code': 0 }
+        - contains: { 'message': '订单创建成功' }
+      extract:
+        orderId: $.data.orderId
+        orderNo: $.data.orderNo
+    
+    - case_name: 缺少必填参数
+      json:
+        productId: "12345"
+        # 缺少quantity
+        price: 99.99
+      validation:
+        - eq: { 'code': 400 }
+        - contains: { 'message': '参数错误' }
+    
+    - case_name: 商品不存在
+      json:
+        productId: "99999"
+        quantity: 1
+        price: 99.99
+      validation:
+        - eq: { 'code': 404 }
+        - contains: { 'message': '商品不存在' }

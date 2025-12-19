@@ -1,0 +1,17 @@
+- baseInfo:
+    api_name: 用户登录
+    url: /api/v1/auth/login
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常登录
+      json:
+        username: admin
+        password: admin123
+      validation:
+        - eq: { 'code': 0 }
+        - contains: { 'message': '登录成功' }
+      extract:
+        token: $.data.token
+        userId: $.data.userId

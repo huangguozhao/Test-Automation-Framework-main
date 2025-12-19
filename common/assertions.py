@@ -1,7 +1,44 @@
 import traceback
 import allure
-import jsonpath
 import operator
+
+# Fix jsonpath compatibility issue
+try:
+    import jsonpath
+    # Test if jsonpath.jsonpath method exists
+    if not hasattr(jsonpath, 'jsonpath'):
+        raise ImportError("jsonpath.jsonpath method not found")
+except (ImportError, AttributeError):
+    try:
+        # Try jsonpath-ng as alternative
+        from jsonpath_ng import parse
+        class JsonPathCompat:
+            @staticmethod
+            def jsonpath(data, path):
+                try:
+                    # Convert JSONPath expression to jsonpath-ng format
+                    if path.startswith('$..'):
+                        path = path[3:]  # Remove $.. prefix
+                    jsonpath_expr = parse(path)
+                    matches = [match.value for match in jsonpath_expr.find(data)]
+                    return matches if matches else False
+                except:
+                    return False
+        jsonpath = JsonPathCompat()
+    except ImportError:
+        # Fallback: create a simple jsonpath implementation
+        class JsonPathCompat:
+            @staticmethod
+            def jsonpath(data, path):
+                try:
+                    if path.startswith('$..'):
+                        key = path[3:]  # Remove $.. prefix
+                        if isinstance(data, dict) and key in data:
+                            return [data[key]]
+                    return False
+                except:
+                    return False
+        jsonpath = JsonPathCompat()
 
 from common.recordlog import logs
 from common.connection import ConnectMysql
@@ -40,7 +77,10 @@ class Assertions:
                 if isinstance(resp_list[0], str):
                     resp_list = ''.join(resp_list)
                 if resp_list:
-                    assert_value = None if assert_value.upper() == 'NONE' else assert_value
+                    # Handle both string and non-string values
+                    if isinstance(assert_value, str):
+                        assert_value = None if assert_value.upper() == 'NONE' else assert_value
+                    # For non-string values (like integers), keep as is
                     if assert_value in resp_list:
                         logs.info("字符串包含断言成功：预期结果【%s】,实际结果【%s】" % (assert_value, resp_list))
                     else:

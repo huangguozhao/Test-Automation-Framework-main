@@ -29,7 +29,10 @@ def generate_test_summary(terminalreporter):
     failed = len(terminalreporter.stats.get('failed', []))
     error = len(terminalreporter.stats.get('error', []))
     skipped = len(terminalreporter.stats.get('skipped', []))
-    duration = time.time() - terminalreporter._sessionstarttime
+    try:
+        duration = time.time() - terminalreporter._sessionstarttime
+    except (AttributeError, TypeError):
+        duration = 0  # 如果无法获取时间，设为0
 
     summary = f"""
     自动化测试结果，通知如下，请着重关注测试失败的接口，具体执行结果如下：

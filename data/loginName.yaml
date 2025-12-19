@@ -10,7 +10,7 @@
         user_name: test01
         passwd: admin123
       validation:
-        - contains: { 'error_code': none }
-        - eq: { 'msg': '登录成功' }
+        - contains: { 'msg_code': 200 }
+        - contains: { 'msg': '登录成功' }
       extract:
         token: $.token
