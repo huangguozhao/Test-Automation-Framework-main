@@ -1,0 +1,19 @@
+ERROR - 2025-07-08 17:46:24,478 - readyaml.py:27 -[readyaml:get_testcase_yaml] - [./testcase/Single interface/addUser.yaml]文件未找到，请检查路径是否正确
+ERROR - 2025-07-08 17:46:24,479 - readyaml.py:27 -[readyaml:get_testcase_yaml] - [./testcase/Single interface/updateUser.yaml]文件未找到，请检查路径是否正确
+ERROR - 2025-07-08 17:46:24,479 - readyaml.py:27 -[readyaml:get_testcase_yaml] - [./testcase/Single interface/deleteUser.yaml]文件未找到，请检查路径是否正确
+ERROR - 2025-07-08 17:46:24,479 - readyaml.py:27 -[readyaml:get_testcase_yaml] - [./testcase/Single interface/queryUser.yaml]文件未找到，请检查路径是否正确
+ERROR - 2025-07-08 17:47:10,495 - readyaml.py:27 -[readyaml:get_testcase_yaml] - [./testcase/Single interface/addUser.yaml]文件未找到，请检查路径是否正确
+ERROR - 2025-07-08 17:47:11,169 - readyaml.py:27 -[readyaml:get_testcase_yaml] - [./testcase/Single interface/updateUser.yaml]文件未找到，请检查路径是否正确
+ERROR - 2025-07-08 17:47:11,170 - readyaml.py:27 -[readyaml:get_testcase_yaml] - [./testcase/Single interface/deleteUser.yaml]文件未找到，请检查路径是否正确
+ERROR - 2025-07-08 17:47:11,170 - readyaml.py:27 -[readyaml:get_testcase_yaml] - [./testcase/Single interface/queryUser.yaml]文件未找到，请检查路径是否正确
+ERROR - 2025-07-08 17:51:21,088 - readyaml.py:27 -[readyaml:get_testcase_yaml] - [./testcase/Single interface/addUser.yaml]文件未找到，请检查路径是否正确
+ERROR - 2025-07-08 17:51:21,088 - readyaml.py:27 -[readyaml:get_testcase_yaml] - [./testcase/Single interface/updateUser.yaml]文件未找到，请检查路径是否正确
+ERROR - 2025-07-08 17:51:21,088 - readyaml.py:27 -[readyaml:get_testcase_yaml] - [./testcase/Single interface/deleteUser.yaml]文件未找到，请检查路径是否正确
+ERROR - 2025-07-08 17:51:21,089 - readyaml.py:27 -[readyaml:get_testcase_yaml] - [./testcase/Single interface/queryUser.yaml]文件未找到，请检查路径是否正确
+ERROR - 2025-07-08 17:53:03,235 - readyaml.py:27 -[readyaml:get_testcase_yaml] - [./testcase/Single interface/addUser.yaml]文件未找到，请检查路径是否正确
+ERROR - 2025-07-08 17:53:15,850 - readyaml.py:27 -[readyaml:get_testcase_yaml] - [./testcase/Single interface/updateUser.yaml]文件未找到，请检查路径是否正确
+ERROR - 2025-07-08 17:56:15,811 - readyaml.py:27 -[readyaml:get_testcase_yaml] - [./testcase/Single interface/updateUser.yaml]文件未找到，请检查路径是否正确
+ERROR - 2025-07-08 17:56:15,813 - readyaml.py:27 -[readyaml:get_testcase_yaml] - [./testcase/Single interface/deleteUser.yaml]文件未找到，请检查路径是否正确
+ERROR - 2025-07-08 17:56:15,814 - readyaml.py:27 -[readyaml:get_testcase_yaml] - [./testcase/Single interface/queryUser.yaml]文件未找到，请检查路径是否正确
+ERROR - 2025-07-08 17:57:00,677 - readyaml.py:27 -[readyaml:get_testcase_yaml] - [./data/loginName.yaml]文件未找到，请检查路径是否正确
+ERROR - 2025-07-08 17:57:00,679 - conftest.py:32 -[conftest:system_login] - 登录接口出现异常，导致后续接口无法继续运行，请检查程序！，'NoneType' object is not subscriptable
