@@ -1,0 +1,58 @@
+- baseInfo:
+    api_name: 获取所有评论
+    url: https://jsonplaceholder.typicode.com/comments
+    method: GET
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 获取评论列表成功
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json()[0].postId': 1 }
+        - eq: { '$.json()[0].id': 1 }
+        - contains: { '$.json()[0].name': 'id labore ex et quam laborum' }
+        - contains: { '$.json()[0].email': 'Eliseo@gardner.biz' }
+
+- baseInfo:
+    api_name: 获取帖子的评论
+    url: https://jsonplaceholder.typicode.com/posts/1/comments
+    method: GET
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 获取帖子1的评论成功
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json()[0].postId': 1 }
+
+- baseInfo:
+    api_name: 通过查询参数获取评论
+    url: https://jsonplaceholder.typicode.com/comments?postId=1
+    method: GET
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 通过postId查询评论成功
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json()[0].postId': 1 }
+
+- baseInfo:
+    api_name: 创建新评论
+    url: https://jsonplaceholder.typicode.com/comments
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 创建评论成功
+      json:
+        postId: 1
+        name: "测试评论标题"
+        email: "test@example.com"
+        body: "这是一个测试评论的内容"
+      validation:
+        - eq: { '$.status_code': 201 }
+        - eq: { '$.json().postId': 1 }
+        - contains: { '$.json().name': '测试评论标题' }
+        - contains: { '$.json().email': 'test@example.com' }
+        - contains: { '$.json().body': '这是一个测试评论的内容' }

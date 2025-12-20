@@ -1,0 +1,76 @@
+- baseInfo:
+    api_name: 获取所有帖子
+    url: https://jsonplaceholder.typicode.com/posts
+    method: GET
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 获取帖子列表成功
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json()[0].userId': 1 }
+        - eq: { '$.json()[0].id': 1 }
+        - contains: { '$.json()[0].title': 'sunt aut facere' }
+
+- baseInfo:
+    api_name: 获取单个帖子
+    url: https://jsonplaceholder.typicode.com/posts/1
+    method: GET
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 获取帖子1详情成功
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json().userId': 1 }
+        - eq: { '$.json().id': 1 }
+        - contains: { '$.json().title': 'sunt aut facere' }
+
+- baseInfo:
+    api_name: 获取用户的帖子
+    url: https://jsonplaceholder.typicode.com/posts?userId=1
+    method: GET
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 获取用户1的帖子成功
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json()[0].userId': 1 }
+
+- baseInfo:
+    api_name: 创建新帖子
+    url: https://jsonplaceholder.typicode.com/posts
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 创建帖子成功
+      json:
+        title: "测试帖子标题"
+        body: "这是一个测试帖子的内容"
+        userId: 1
+      validation:
+        - eq: { '$.status_code': 201 }
+        - contains: { '$.json().title': '测试帖子标题' }
+        - contains: { '$.json().body': '这是一个测试帖子的内容' }
+        - eq: { '$.json().userId': 1 }
+
+- baseInfo:
+    api_name: 更新帖子
+    url: https://jsonplaceholder.typicode.com/posts/1
+    method: PUT
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 更新帖子成功
+      json:
+        id: 1
+        title: "更新后的帖子标题"
+        body: "更新后的帖子内容"
+        userId: 1
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json().id': 1 }
+        - contains: { '$.json().title': '更新后的帖子标题' }
+        - contains: { '$.json().body': '更新后的帖子内容' }
