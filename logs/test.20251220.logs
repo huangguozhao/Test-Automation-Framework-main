@@ -3298,3 +3298,44 @@ FileNotFoundError: [Errno 2] No such file or directory: '../data/mockdata/userMa
 -->
 
 INFO - 2025-12-20 08:40:37,489 - conftest.py:22 -[conftest:start_test_and_end] - -------------接口测试结束--------------
+ERROR - 2025-12-20 09:00:59,465 - readyaml.py:112 -[readyaml:get_extract_yaml] - 【extract.yaml】没有找到：userId,--'userId'
+ERROR - 2025-12-20 09:00:59,466 - readyaml.py:112 -[readyaml:get_extract_yaml] - 【extract.yaml】没有找到：userId,--'userId'
+INFO - 2025-12-20 09:00:59,467 - sendrequest.py:135 -[sendrequest:run_main] - 接口名称：创建订单
+INFO - 2025-12-20 09:00:59,467 - sendrequest.py:136 -[sendrequest:run_main] - 请求地址：http://127.0.0.1:8787/api/v1/orders
+INFO - 2025-12-20 09:00:59,467 - sendrequest.py:137 -[sendrequest:run_main] - 请求方式：POST
+INFO - 2025-12-20 09:00:59,467 - sendrequest.py:138 -[sendrequest:run_main] - 测试用例名称：正常创建订单
+INFO - 2025-12-20 09:00:59,468 - sendrequest.py:139 -[sendrequest:run_main] - 请求头：{'Content-Type': 'application/json', 'Authorization': 'Bearer e3b06a4edDbDaa16FfaA5e2825F9f'}
+INFO - 2025-12-20 09:00:59,468 - sendrequest.py:140 -[sendrequest:run_main] - Cookie：None
+INFO - 2025-12-20 09:00:59,470 - sendrequest.py:147 -[sendrequest:run_main] - 请求参数：{'json': {'productId': '12345', 'quantity': 2, 'price': 99.99, 'userId': 'None'}}
+INFO - 2025-12-20 09:00:59,492 - sendrequest.py:108 -[sendrequest:send_request] - 接口返回信息：<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+
+INFO - 2025-12-20 09:00:59,793 - sendrequest.py:135 -[sendrequest:run_main] - 接口名称：创建订单
+INFO - 2025-12-20 09:00:59,793 - sendrequest.py:136 -[sendrequest:run_main] - 请求地址：http://127.0.0.1:8787/api/v1/orders
+INFO - 2025-12-20 09:00:59,794 - sendrequest.py:137 -[sendrequest:run_main] - 请求方式：POST
+INFO - 2025-12-20 09:00:59,794 - sendrequest.py:138 -[sendrequest:run_main] - 测试用例名称：缺少必填参数
+INFO - 2025-12-20 09:00:59,794 - sendrequest.py:139 -[sendrequest:run_main] - 请求头：{'Content-Type': 'application/json', 'Authorization': 'Bearer e3b06a4edDbDaa16FfaA5e2825F9f'}
+INFO - 2025-12-20 09:00:59,794 - sendrequest.py:140 -[sendrequest:run_main] - Cookie：None
+INFO - 2025-12-20 09:00:59,796 - sendrequest.py:147 -[sendrequest:run_main] - 请求参数：{'json': {'productId': '12345', 'price': 99.99}}
+INFO - 2025-12-20 09:00:59,817 - sendrequest.py:108 -[sendrequest:send_request] - 接口返回信息：<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+
+INFO - 2025-12-20 09:00:59,873 - sendrequest.py:135 -[sendrequest:run_main] - 接口名称：创建订单
+INFO - 2025-12-20 09:00:59,873 - sendrequest.py:136 -[sendrequest:run_main] - 请求地址：http://127.0.0.1:8787/api/v1/orders
+INFO - 2025-12-20 09:00:59,874 - sendrequest.py:137 -[sendrequest:run_main] - 请求方式：POST
+INFO - 2025-12-20 09:00:59,874 - sendrequest.py:138 -[sendrequest:run_main] - 测试用例名称：商品不存在
+INFO - 2025-12-20 09:00:59,874 - sendrequest.py:139 -[sendrequest:run_main] - 请求头：{'Content-Type': 'application/json', 'Authorization': 'Bearer e3b06a4edDbDaa16FfaA5e2825F9f'}
+INFO - 2025-12-20 09:00:59,875 - sendrequest.py:140 -[sendrequest:run_main] - Cookie：None
+INFO - 2025-12-20 09:00:59,876 - sendrequest.py:147 -[sendrequest:run_main] - 请求参数：{'json': {'productId': '99999', 'quantity': 1, 'price': 99.99}}
+INFO - 2025-12-20 09:00:59,892 - sendrequest.py:108 -[sendrequest:send_request] - 接口返回信息：<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+

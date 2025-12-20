@@ -1,0 +1,20 @@
+[
+  {
+    "name": "订单管理功能",
+    "description": "订单相关的核心功能测试",
+    "messageRegex": ".*order.*",
+    "traceRegex": ".*TestOrder.*"
+  },
+  {
+    "name": "API接口测试",
+    "description": "REST API接口功能验证",
+    "messageRegex": ".*api.*",
+    "traceRegex": ".*"
+  },
+  {
+    "name": "参数验证测试",
+    "description": "接口参数校验和异常处理",
+    "messageRegex": ".*参数.*",
+    "traceRegex": ".*"
+  }
+]

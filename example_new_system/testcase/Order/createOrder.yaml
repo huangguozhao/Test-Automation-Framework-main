@@ -1,6 +1,6 @@
 - baseInfo:
     api_name: 创建订单
-    url: /api/v1/orders
+    url: /coupApply/cms/placeAnOrder
     method: POST
     header:
       Content-Type: application/json
@@ -13,11 +13,11 @@
         price: 99.99
         userId: ${get_extract_data(userId)}
       validation:
-        - eq: { 'code': 0 }
-        - contains: { 'message': '订单创建成功' }
+        - contains: { 'msg_code': 200 }
+        - contains: { 'msg': '下单成功' }
       extract:
-        orderId: $.data.orderId
-        orderNo: $.data.orderNo
+        orderId: $.orderId
+        orderNo: $.orderNo
     
     - case_name: 缺少必填参数
       json:
@@ -25,8 +25,8 @@
         # 缺少quantity
         price: 99.99
       validation:
-        - eq: { 'code': 400 }
-        - contains: { 'message': '参数错误' }
+        - contains: { 'msg_code': 400 }
+        - contains: { 'msg': '参数错误' }
     
     - case_name: 商品不存在
       json:
@@ -34,5 +34,5 @@
         quantity: 1
         price: 99.99
       validation:
-        - eq: { 'code': 404 }
-        - contains: { 'message': '商品不存在' }
+        - contains: { 'msg_code': 404 }
+        - contains: { 'msg': '商品不存在' }

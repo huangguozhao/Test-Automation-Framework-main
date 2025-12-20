@@ -1,7 +1,8 @@
 import sys
 import os
 # 添加项目根目录到Python路径
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
+# 从 example_new_system/testcase/Order/test_order.py 到项目根目录需要向上3级
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../'))
 sys.path.insert(0, project_root)
 
 import allure
