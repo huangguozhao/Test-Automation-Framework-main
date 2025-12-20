@@ -1,25 +1,25 @@
-# 新系统测试自动化框架
+# API自动化测试框架
 
-这是一个基于pytest + allure的API自动化测试框架，专门用于新系统的接口测试。框架提供了完整的测试解决方案，包括测试用例管理、报告生成、环境配置等功能。
+这是一个基于pytest + allure的API自动化测试框架，提供了完整的测试解决方案，包括测试用例管理、报告生成、环境配置等功能。
 
 ## 🎯 **快速开始**
 
-### **一键测试（推荐）**
-```bash
-# 运行完整的测试流程
-python run_new_system.py
-```
-
-### **手动测试**
+### **基础测试**
 ```bash
 # 1. 启动Mock服务器
 python mock_server/api_server/base/flask_service.py
 
-# 2. 运行测试
-pytest example_new_system/testcase/ --alluredir=report/new_system_temp -v
+# 2. 运行测试（需要先创建测试用例）
+pytest testcase/ --alluredir=report/temp -v
 
 # 3. 查看Allure报告
-allure serve report/new_system_temp
+allure serve report/temp
+```
+
+### **使用uv运行**
+```bash
+# 使用uv自动管理依赖和虚拟环境
+uv run run.py
 ```
 
 ## 📁 **项目结构**
@@ -30,19 +30,15 @@ allure serve report/new_system_temp
 ├── conf/                           # 配置文件
 ├── data/                           # 测试数据
 ├── mock_server/                    # Mock服务器
-├── example_new_system/             # 新系统测试示例
-│   ├── testcase/Order/            # 订单模块测试
-│   ├── config.ini                 # 系统配置
-│   ├── loginName.yaml             # 登录配置
-│   ├── pytest.ini                # pytest配置
-│   └── README.md                  # 详细说明
+├── testcase/                       # 测试用例目录（空）
+│   ├── __init__.py                # Python包标识
+│   ├── conftest.py                # pytest配置
+│   └── extract.yaml               # 数据提取配置
 ├── report/                         # 测试报告
-│   ├── new_system_temp/           # 新系统测试报告
-│   └── new_system_demo/           # 演示报告
 ├── logs/                          # 日志文件
-├── run_new_system.py              # 新系统一键测试脚本
-├── demo_allure_report.py          # Allure报告演示
-└── 新系统测试快速指南.md          # 快速入门指南
+├── run.py                         # 主运行脚本
+├── pytest.ini                    # pytest配置
+└── adaptation_guide.md            # 框架适配指南
 ```
 
 ## 🚀 **核心功能**
@@ -66,31 +62,6 @@ allure serve report/new_system_temp
 - 🎲 **模拟数据**: 无需真实环境，支持各种测试场景
 - 🚀 **快速启动**: 一键启动，支持热重载
 
-## 📊 **测试用例示例**
-
-### **订单管理模块**
-- **创建订单**: 正常创建、参数验证、异常处理
-- **查询订单**: 订单状态查询、物流状态查询
-
-### **YAML配置示例**
-```yaml
-- baseInfo:
-    api_name: 创建订单
-    url: /coupApply/cms/placeAnOrder
-    method: POST
-    header:
-      Content-Type: application/json
-  testCase:
-    - case_name: 正常创建订单
-      json:
-        productId: "12345"
-        quantity: 2
-        price: 99.99
-      validation:
-        - contains: { 'msg_code': 200 }
-        - contains: { 'msg': '下单成功' }
-```
-
 ## 🛠️ **环境要求**
 
 ### **Python依赖**
@@ -107,34 +78,53 @@ brew install allure
 # 下载并安装: https://allurereport.org/docs/install-for-windows/
 ```
 
-## 📚 **文档指南**
+## 📚 **使用指南**
 
-- 📄 [新系统测试快速指南](./新系统测试快速指南.md) - 快速入门
-- 📄 [框架适配指南](./adaptation_guide.md) - 如何适配新系统
-- 📄 [测试启动方法](./test_startup_guide.md) - 多种启动方式
-- 📄 [新系统示例说明](./example_new_system/README.md) - 详细示例
+### **创建测试用例**
+1. 在 `testcase/` 目录下创建模块文件夹
+2. 编写YAML测试用例文件
+3. 编写对应的Python测试文件
+4. 参考 `adaptation_guide.md` 了解详细步骤
+
+### **YAML配置示例**
+```yaml
+- baseInfo:
+    api_name: 示例接口
+    url: /api/example
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常请求
+      json:
+        param1: "value1"
+        param2: "value2"
+      validation:
+        - contains: { 'code': 200 }
+        - contains: { 'msg': '成功' }
+```
 
 ## 🎨 **高级功能**
 
 ### **并行测试**
 ```bash
 pip install pytest-xdist
-pytest example_new_system/testcase/ -n 2 --alluredir=report/new_system_temp
+pytest testcase/ -n 2 --alluredir=report/temp
 ```
 
 ### **失败重试**
 ```bash
 pip install pytest-rerunfailures
-pytest example_new_system/testcase/ --reruns 2 --alluredir=report/new_system_temp
+pytest testcase/ --reruns 2 --alluredir=report/temp
 ```
 
 ### **标记测试**
 ```bash
 # 只运行冒烟测试
-pytest example_new_system/testcase/ -m smoke
+pytest testcase/ -m smoke
 
 # 只运行关键功能
-pytest example_new_system/testcase/ -m critical
+pytest testcase/ -m critical
 ```
 
 ## 🆘 **常见问题**
@@ -162,12 +152,4 @@ A: 检查Allure是否正确安装，或使用静态报告模式
 
 ---
 
-🚀 **立即开始**: `python run_new_system.py`
-
-### 运行测试
-
-使用 uv run 会自动创建虚拟环境，并测试上面的 mock_server 接口, 运行完成后会自动生成 allure 报告
-
-```bash
-uv run run.py
-```
+🚀 **立即开始**: 查看 `adaptation_guide.md` 了解如何创建你的第一个测试用例
