@@ -224,6 +224,12 @@ cd E:/myProject/Test-Automation-Framework-main
 pytest testcase/
 ```
 
+### **示例目录问题**
+如果遇到 `TypeError: 'NoneType' object is not iterable` 错误：
+- 这通常是因为 `example_new_system/` 目录被 pytest 自动发现
+- 解决方案：在 `pytest.ini` 中设置 `testpaths = ./testcase/` 来限制测试范围
+- 或者运行时明确指定目录：`pytest testcase/`
+
 ## 💡 **最佳实践**
 
 1. **开发阶段**: 使用 `pytest -v` 快速验证
