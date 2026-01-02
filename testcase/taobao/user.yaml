@@ -1,0 +1,137 @@
+- baseInfo:
+    api_name: 新增用户
+    url: http://localhost:8080/user/add
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常新增用户
+      json:
+        username: testuser1
+        password: 123456
+        email: testuser1@example.com
+        role: user
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json().status': 'success' }
+        - contains: { '$.json().info': '成功' }
+    
+    - case_name: 用户名已存在
+      json:
+        username: testuser1
+        password: 123456
+        email: testuser_dup@example.com
+        role: user
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json().status': 'error' }
+        - contains: { '$.json().info': '用户名已存在' }
+    
+    - case_name: 邮箱格式错误
+      json:
+        username: testuser2
+        password: 123456
+        email: invalid-email
+        role: user
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json().status': 'error' }
+        - contains: { '$.json().info': '邮箱格式' }
+    
+    - case_name: 缺少必填参数
+      json:
+        password: 123456
+        email: testuser3@example.com
+        role: user
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json().status': 'error' }
+        - contains: { '$.json().info': '必填' }
+
+- baseInfo:
+    api_name: 根据ID查询用户
+    url: http://localhost:8080/user/getUserById
+    method: GET
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 查询不存在的用户
+      params:
+        id: 999999
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json().status': 'error' }
+        - contains: { '$.json().info': '用户不存在' }
+
+- baseInfo:
+    api_name: 根据用户名查询用户
+    url: http://localhost:8080/user/getUserByUsername
+    method: GET
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常查询用户
+      params:
+        username: testuser1
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json().status': 'success' }
+        - contains: { '$.json().data.username': 'testuser1' }
+    
+    - case_name: 查询不存在的用户名
+      params:
+        username: nonexistentuser
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json().status': 'error' }
+        - contains: { '$.json().info': '用户不存在' }
+
+- baseInfo:
+    api_name: 更新用户信息
+    url: http://localhost:8080/user/updateUserById
+    method: PUT
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常更新用户信息
+      json:
+        bean:
+          username: testuser1
+          email: updated_testuser1@example.com
+          role: seller
+        id: "$user_id$"
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json().status': 'success' }
+        - contains: { '$.json().info': '成功' }
+
+- baseInfo:
+    api_name: 删除用户
+    url: http://localhost:8080/user/deleteUserById
+    method: DELETE
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 删除不存在的用户
+      params:
+        id: 999999
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json().status': 'error' }
+        - contains: { '$.json().info': '用户不存在' }
+
+- baseInfo:
+    api_name: 分页查询用户列表
+    url: http://localhost:8080/user/loadDataList
+    method: GET
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常分页查询
+      params:
+        pageSize: 10
+        pageNum: 1
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json().status': 'success' }
+        - contains: { '$.json().info': '成功' }

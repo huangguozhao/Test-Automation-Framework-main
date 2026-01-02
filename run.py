@@ -8,12 +8,12 @@ if __name__ == '__main__':
 
     if REPORT_TYPE == 'allure':
         pytest.main(
-            ['-s', '-v', '--alluredir=./report/temp', './testcase', '--clean-alluredir',
+            ['-s', '-v', '--alluredir=./report/temp', './testcase/easyjava_test/test_user.py', '--clean-alluredir',
              '--junitxml=./report/results.xml'])
 
         shutil.copy('./environment.xml', './report/temp')
         os.system('allure serve ./report/temp')
 
     elif REPORT_TYPE == 'tm':
-        pytest.main(['-vs', '--pytest-tmreport-name=testReport.html', '--pytest-tmreport-path=./report/tmreport'])
+        pytest.main(['-vs', '--pytest-tmreport-name=testReport.html', '--pytest-tmreport-path=./report/tmreport', './testcase/taobao'])
         webbrowser.open_new_tab(os.getcwd() + '/report/tmreport/testReport.html')

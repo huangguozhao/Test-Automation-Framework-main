@@ -1,0 +1,150 @@
+- baseInfo:
+    api_name: 新增订单
+    url: http://localhost:8080/order/add
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常创建订单
+      json:
+        orderNo: "ORDER20250102123456"
+        userId: 1
+        shopId: 1
+        totalAmount: 299.00
+        discountAmount: 20.00
+        payAmount: 279.00
+        status: pending_pay
+        payType: alipay
+        addressInfo:
+          address: 北京市朝阳区建国门外大街1号
+          phone: 13800138000
+          receiver: 张三
+        remark: 请尽快发货
+        createTime: "2025-01-02 11:30:00"
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json().status': 'success' }
+        - contains: { '$.json().info': '成功' }
+        - not_null: { '$.json().data.orderNo' }
+    
+    - case_name: 用户ID不存在
+      json:
+        orderNo: "ORDER20250102123457"
+        userId: 999999
+        shopId: 1
+        totalAmount: 299.00
+        discountAmount: 20.00
+        payAmount: 279.00
+        status: pending_pay
+        payType: alipay
+        addressInfo:
+          address: 北京市朝阳区建国门外大街1号
+          phone: 13800138000
+          receiver: 张三
+        remark: 请尽快发货
+        createTime: "2025-01-02 11:30:00"
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json().status': 'error' }
+        - contains: { '$.json().info': '用户不存在' }
+    
+    - case_name: 收货地址不存在
+      json:
+        orderNo: "ORDER20250102123458"
+        userId: 1
+        shopId: 1
+        totalAmount: 299.00
+        discountAmount: 20.00
+        payAmount: 279.00
+        status: pending_pay
+        payType: alipay
+        addressInfo:
+          address: 北京市朝阳区建国门外大街1号
+          phone: 13800138000
+          receiver: 张三
+        remark: 请尽快发货
+        createTime: "2025-01-02 11:30:00"
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json().status': 'error' }
+        - contains: { '$.json().info': '地址' }
+
+- baseInfo:
+    api_name: 根据订单号查询订单
+    url: http://localhost:8080/order/getOrderByOrderNo
+    method: GET
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 查询不存在的订单号
+      params:
+        orderNo: NON_EXISTENT_ORDER
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json().status': 'error' }
+        - contains: { '$.json().info': '订单不存在' }
+
+- baseInfo:
+    api_name: 更新订单状态
+    url: http://localhost:8080/order/updateOrderById
+    method: PUT
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常更新订单状态
+      json:
+        status: paid
+        paymentTime: "2026-01-02T10:00:00"
+        id: 1
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json().status': 'success' }
+        - contains: { '$.json().info': '成功' }
+    
+    - case_name: 更新不存在的订单
+      json:
+        status: paid
+        id: 999999
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json().status': 'error' }
+        - contains: { '$.json().info': '订单不存在' }
+
+- baseInfo:
+    api_name: 根据ID删除订单
+    url: http://localhost:8080/order/deleteOrderById
+    method: DELETE
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常删除订单
+      params:
+        id: 2
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json().status': 'success' }
+        - contains: { '$.json().info': '成功' }
+    
+    - case_name: 删除不存在的订单
+      params:
+        id: 999999
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json().status': 'error' }
+        - contains: { '$.json().info': '订单不存在' }
+
+- baseInfo:
+    api_name: 分页查询订单列表
+    url: http://localhost:8080/order/loadDataList
+    method: GET
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常分页查询订单
+      params:
+        pageSize: 10
+        pageNum: 1
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json().status': 'success' }
+        - contains: { '$.json().info': '成功' }

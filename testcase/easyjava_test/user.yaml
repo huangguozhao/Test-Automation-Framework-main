@@ -1,0 +1,175 @@
+- baseInfo:
+    api_name: 查询用户列表（分页）
+    url: http://localhost:8080/user/loadDataList
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常分页查询用户列表
+      json:
+        pageNo: 1
+        pageSize: 10
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据用户名查询用户
+    url: http://localhost:8080/user/getUserByUserId
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 根据存在的用户ID查询
+      json:
+        userId: 1
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 新增用户
+    url: http://localhost:8080/user/add
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常新增用户
+      json:
+        username: "newuser"
+        password: "123456"
+        email: "newuser@example.com"
+        realName: "新用户"
+        phone: "13800000000"
+        gender: 1
+        birthday: "1995-01-01"
+        status: 1
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 更新用户信息
+    url: http://localhost:8080/user/updateUserByUserId
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常更新用户信息
+      json:
+        userId: 1
+        realName: "张三（已更新）"
+        phone: "13900000000"
+        status: 0
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 删除用户
+    url: http://localhost:8080/user/deleteUserByUserId
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常删除用户
+      json:
+        userId: 4
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 用户名唯一性验证
+    url: http://localhost:8080/user/add
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 用户名已存在
+      json:
+        username: "zhangsan"
+        password: "123456"
+        email: "test@example.com"
+      validation:
+        - contains: { 'status': 'error' }
+
+- baseInfo:
+    api_name: 邮箱唯一性验证
+    url: http://localhost:8080/user/add
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 邮箱已存在
+      json:
+        username: "uniqueuser"
+        password: "123456"
+        email: "zhangsan@example.com"
+      validation:
+        - contains: { 'status': 'error' }
+
+- baseInfo:
+    api_name: 必填字段验证
+    url: http://localhost:8080/user/add
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 缺少必填字段密码
+      json:
+        username: "testuser"
+        email: "test@example.com"
+      validation:
+        - contains: { 'status': 'error' }
+
+- baseInfo:
+    api_name: 分页查询边界测试
+    url: http://localhost:8080/user/loadDataList
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: pageNo为0的情况
+      json:
+        pageNo: 0
+        pageSize: 10
+      validation:
+        - contains: { 'status': 'success' }
+    
+    - case_name: pageSize为0的情况
+      json:
+        pageNo: 1
+        pageSize: 0
+      validation:
+        - contains: { 'status': 'success' }
+    
+    - case_name: 超大pageNo的情况
+      json:
+        pageNo: 999
+        pageSize: 10
+      validation:
+        - contains: { 'status': 'success' }
+    
+    - case_name: 超大pageSize的情况
+      json:
+        pageNo: 1
+        pageSize: 1000
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 用户状态变更测试
+    url: http://localhost:8080/user/updateUserByUserId
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 将用户状态从正常改为禁用
+      json:
+        userId: 1
+        status: 0
+      validation:
+        - contains: { 'status': 'success' }
+    
+    - case_name: 将用户状态从禁用改为锁定
+      json:
+        userId: 1
+        status: 2
+      validation:
+        - contains: { 'status': 'success' }
