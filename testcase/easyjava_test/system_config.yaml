@@ -1,0 +1,145 @@
+- baseInfo:
+    api_name: 分页查询系统配置列表
+    url: http://localhost:8080/systemConfig/loadDataList
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常分页查询系统配置列表
+      json:
+        pageNo: 1
+        pageSize: 10
+        configKey: ""
+        configType: "STRING"
+        isSystem: 0
+        orderBy: "create_time desc"
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 添加系统配置
+    url: http://localhost:8080/systemConfig/add
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常添加系统配置
+      json:
+        configKey: "test.config.key"
+        configValue: "测试配置值"
+        configType: "STRING"
+        isSystem: 0
+        description: "测试配置项"
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 批量添加系统配置
+    url: http://localhost:8080/systemConfig/addBatch
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常批量添加系统配置
+      json:
+        - configKey: "batch.config1"
+          configValue: "100"
+          configType: "NUMBER"
+          isSystem: 0
+          description: "批量配置1"
+        - configKey: "batch.config2"
+          configValue: "true"
+          configType: "BOOLEAN"
+          isSystem: 0
+          description: "批量配置2"
+        - configKey: "batch.config3"
+          configValue: "[\"item1\", \"item2\", \"item3\"]"
+          configType: "JSON"
+          isSystem: 0
+          description: "批量配置3"
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据配置ID查询
+    url: http://localhost:8080/systemConfig/getSystemConfigByConfigId
+    method: GET
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 根据存在的配置ID查询
+      params:
+        configId: 1
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据配置ID修改
+    url: http://localhost:8080/systemConfig/updateSystemConfigByConfigId
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常根据配置ID修改
+      json:
+        configValue: "修改后的配置值"
+        description: "修改后的描述"
+      params:
+        configId: 1
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据配置ID删除
+    url: http://localhost:8080/systemConfig/deleteSystemConfigByConfigId
+    method: DELETE
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常根据配置ID删除
+      params:
+        configId: 1
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据配置键查询
+    url: http://localhost:8080/systemConfig/getSystemConfigByConfigKey
+    method: GET
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 根据存在的配置键查询
+      params:
+        configKey: system.name
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据配置键修改
+    url: http://localhost:8080/systemConfig/updateSystemConfigByConfigKey
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常根据配置键修改
+      json:
+        configValue: "EasyJava测试系统v2.0"
+        description: "更新后的系统名称"
+      params:
+        configKey: system.name
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据配置键删除
+    url: http://localhost:8080/systemConfig/deleteSystemConfigByConfigKey
+    method: DELETE
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常根据配置键删除
+      params:
+        configKey: system.name
+      validation:
+        - contains: { 'status': 'success' }

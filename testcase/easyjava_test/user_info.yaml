@@ -1,0 +1,189 @@
+- baseInfo:
+    api_name: 分页查询用户列表
+    url: http://localhost:8080/userInfo/loadDataList
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常分页查询用户列表
+      json:
+        pageNo: 1
+        pageSize: 10
+        username: ""
+        realName: ""
+        status: 1
+        orderBy: "create_time desc"
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 新增用户
+    url: http://localhost:8080/userInfo/add
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常新增用户
+      json:
+        username: "testuser001"
+        password: "$2a$10$abc123def456..."
+        email: "testuser001@example.com"
+        phone: "13800138001"
+        realName: "测试用户001"
+        gender: 1
+        birthday: "1990-01-01"
+        status: 1
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 批量新增用户
+    url: http://localhost:8080/userInfo/addBatch
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常批量新增用户
+      json:
+        - username: "batchuser001"
+          password: "$2a$10$abc123def456..."
+          email: "batchuser001@example.com"
+          phone: "13800138002"
+          realName: "批量用户001"
+          gender: 1
+          birthday: "1992-05-15"
+          status: 1
+        - username: "batchuser002"
+          password: "$2a$10$abc123def456..."
+          email: "batchuser002@example.com"
+          phone: "13800138003"
+          realName: "批量用户002"
+          gender: 2
+          birthday: "1995-08-20"
+          status: 1
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据用户ID查询
+    url: http://localhost:8080/userInfo/getUserInfoByUserId
+    method: GET
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 根据存在的用户ID查询
+      params:
+        userId: 1
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据用户ID修改
+    url: http://localhost:8080/userInfo/updateUserInfoByUserId
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常修改用户信息
+      json:
+        phone: "13899999999"
+        realName: "修改后的姓名"
+      params:
+        userId: 1
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据用户ID删除
+    url: http://localhost:8080/userInfo/deleteUserInfoByUserId
+    method: DELETE
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常删除用户
+      params:
+        userId: 1
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据用户名查询
+    url: http://localhost:8080/userInfo/getUserInfoByUsername
+    method: GET
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 根据存在的用户名查询
+      params:
+        username: zhangsan
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据用户名修改
+    url: http://localhost:8080/userInfo/updateUserInfoByUsername
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常根据用户名修改
+      json:
+        phone: "13900000000"
+      params:
+        username: zhangsan
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据用户名删除
+    url: http://localhost:8080/userInfo/deleteUserInfoByUsername
+    method: DELETE
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常根据用户名删除
+      params:
+        username: zhangsan
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据邮箱查询
+    url: http://localhost:8080/userInfo/getUserInfoByEmail
+    method: GET
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 根据存在的邮箱查询
+      params:
+        email: zhangsan@example.com
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据邮箱修改
+    url: http://localhost:8080/userInfo/updateUserInfoByEmail
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常根据邮箱修改
+      json:
+        realName: "张三修改"
+      params:
+        email: zhangsan@example.com
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据邮箱删除
+    url: http://localhost:8080/userInfo/deleteUserInfoByEmail
+    method: DELETE
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常根据邮箱删除
+      params:
+        email: zhangsan@example.com
+      validation:
+        - contains: { 'status': 'success' }

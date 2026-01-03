@@ -1,0 +1,91 @@
+- baseInfo:
+    api_name: 获取所有用户
+    url: https://jsonplaceholder.typicode.com/users
+    method: GET
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 获取用户列表成功
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json()[0].id': 1 }
+        - contains: { '$.json()[0].name': 'Leanne Graham' }
+        - contains: { '$.json()[0].email': 'Sincere@april.biz' }
+
+- baseInfo:
+    api_name: 获取单个用户
+    url: https://jsonplaceholder.typicode.com/users/1
+    method: GET
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 获取用户1详情成功
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json().id': 1 }
+        - contains: { '$.json().name': 'Leanne Graham' }
+        - contains: { '$.json().username': 'Bret' }
+        - contains: { '$.json().email': 'Sincere@april.biz' }
+
+- baseInfo:
+    api_name: 获取不存在的用户
+    url: https://jsonplaceholder.typicode.com/users/999
+    method: GET
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 获取不存在用户返回404
+      validation:
+        - eq: { '$.status_code': 404 }
+
+- baseInfo:
+    api_name: 创建新用户
+    url: https://jsonplaceholder.typicode.com/users
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 创建用户成功
+      json:
+        name: "测试用户"
+        username: "testuser"
+        email: "test@example.com"
+        phone: "1-770-736-8031"
+        website: "test.org"
+      validation:
+        - eq: { '$.status_code': 201 }
+        - contains: { '$.json().name': '测试用户' }
+        - contains: { '$.json().username': 'testuser' }
+        - contains: { '$.json().email': 'test@example.com' }
+
+- baseInfo:
+    api_name: 更新用户信息
+    url: https://jsonplaceholder.typicode.com/users/1
+    method: PUT
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 更新用户信息成功
+      json:
+        id: 1
+        name: "更新后的用户名"
+        username: "updateduser"
+        email: "updated@example.com"
+        phone: "1-770-736-8031"
+        website: "updated.org"
+      validation:
+        - eq: { '$.status_code': 200 }
+        - eq: { '$.json().id': 1 }
+        - contains: { '$.json().name': '更新后的用户名' }
+        - contains: { '$.json().username': 'updateduser' }
+
+- baseInfo:
+    api_name: 删除用户
+    url: https://jsonplaceholder.typicode.com/users/1
+    method: DELETE
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 删除用户成功
+      validation:
+        - eq: { '$.status_code': 200 }

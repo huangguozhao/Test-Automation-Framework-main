@@ -1,0 +1,1563 @@
+{
+	"info": {
+		"_postman_id": "easyjava-test-collection-001",
+		"name": "EasyJava测试系统API集合",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "easyjava-generator",
+		"description": "EasyJava代码生成器测试系统的完整API集合，包含用户信息、产品管理、订单管理、系统配置等模块"
+	},
+	"item": [
+		{
+			"name": "用户信息管理",
+			"item": [
+				{
+					"name": "分页查询用户列表",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pageNo\": 1,\n  \"pageSize\": 10,\n  \"username\": \"\",\n  \"realName\": \"\",\n  \"status\": 1,\n  \"orderBy\": \"create_time desc\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/userInfo/loadDataList",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"userInfo",
+								"loadDataList"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "新增用户",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"testuser001\",\n  \"password\": \"$2a$10$abc123def456...\",\n  \"email\": \"testuser001@example.com\",\n  \"phone\": \"13800138001\",\n  \"realName\": \"测试用户001\",\n  \"gender\": 1,\n  \"birthday\": \"1990-01-01\",\n  \"status\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/userInfo/add",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"userInfo",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "批量新增用户",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n  {\n    \"username\": \"batchuser001\",\n    \"password\": \"$2a$10$abc123def456...\",\n    \"email\": \"batchuser001@example.com\",\n    \"phone\": \"13800138002\",\n    \"realName\": \"批量用户001\",\n    \"gender\": 1,\n    \"birthday\": \"1992-05-15\",\n    \"status\": 1\n  },\n  {\n    \"username\": \"batchuser002\",\n    \"password\": \"$2a$10$abc123def456...\",\n    \"email\": \"batchuser002@example.com\",\n    \"phone\": \"13800138003\",\n    \"realName\": \"批量用户002\",\n    \"gender\": 2,\n    \"birthday\": \"1995-08-20\",\n    \"status\": 1\n  }\n]"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/userInfo/addBatch",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"userInfo",
+								"addBatch"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据用户ID查询",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/userInfo/getUserInfoByUserId?userId=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"userInfo",
+								"getUserInfoByUserId"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1",
+									"description": "用户ID"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据用户ID修改",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"phone\": \"13899999999\",\n  \"realName\": \"修改后的姓名\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/userInfo/updateUserInfoByUserId?userId=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"userInfo",
+								"updateUserInfoByUserId"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1",
+									"description": "用户ID"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据用户ID删除",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/userInfo/deleteUserInfoByUserId?userId=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"userInfo",
+								"deleteUserInfoByUserId"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1",
+									"description": "用户ID"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据用户名查询",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/userInfo/getUserInfoByUsername?username=zhangsan",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"userInfo",
+								"getUserInfoByUsername"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "zhangsan",
+									"description": "用户名"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据用户名修改",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"phone\": \"13900000000\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/userInfo/updateUserInfoByUsername?username=zhangsan",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"userInfo",
+								"updateUserInfoByUsername"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "zhangsan",
+									"description": "用户名"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据用户名删除",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/userInfo/deleteUserInfoByUsername?username=zhangsan",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"userInfo",
+								"deleteUserInfoByUsername"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "zhangsan",
+									"description": "用户名"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据邮箱查询",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/userInfo/getUserInfoByEmail?email=zhangsan@example.com",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"userInfo",
+								"getUserInfoByEmail"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "zhangsan@example.com",
+									"description": "邮箱地址"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据邮箱修改",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"realName\": \"张三修改\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/userInfo/updateUserInfoByEmail?email=zhangsan@example.com",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"userInfo",
+								"updateUserInfoByEmail"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "zhangsan@example.com",
+									"description": "邮箱地址"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据邮箱删除",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/userInfo/deleteUserInfoByEmail?email=zhangsan@example.com",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"userInfo",
+								"deleteUserInfoByEmail"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "zhangsan@example.com",
+									"description": "邮箱地址"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "用户信息管理相关API，包括用户的增删改查、批量操作等"
+		},
+		{
+			"name": "产品管理",
+			"item": [
+				{
+					"name": "分页查询产品列表",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pageNo\": 1,\n  \"pageSize\": 10,\n  \"productName\": \"\",\n  \"category\": \"\",\n  \"status\": \"ACTIVE\",\n  \"orderBy\": \"create_time desc\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/product/loadDataList",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"product",
+								"loadDataList"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "新增产品",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productName\": \"测试商品001\",\n  \"productCode\": \"TEST001\",\n  \"category\": \"ELECTRONICS\",\n  \"price\": 99.99,\n  \"stockQuantity\": 100,\n  \"status\": \"ACTIVE\",\n  \"description\": \"这是一个测试商品\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/product/add",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"product",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "批量新增产品",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n  {\n    \"productName\": \"批量商品001\",\n    \"productCode\": \"BATCH001\",\n    \"category\": \"CLOTHING\",\n    \"price\": 199.99,\n    \"stockQuantity\": 50,\n    \"status\": \"ACTIVE\",\n    \"description\": \"批量测试商品001\"\n  },\n  {\n    \"productName\": \"批量商品002\",\n    \"productCode\": \"BATCH002\",\n    \"category\": \"FOOD\",\n    \"price\": 29.99,\n    \"stockQuantity\": 200,\n    \"status\": \"ACTIVE\",\n    \"description\": \"批量测试商品002\"\n  }\n]"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/product/addBatch",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"product",
+								"addBatch"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据产品ID查询",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/product/getProductByProductId?productId=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"product",
+								"getProductByProductId"
+							],
+							"query": [
+								{
+									"key": "productId",
+									"value": "1",
+									"description": "产品ID"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据产品ID修改",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"price\": 129.99,\n  \"stockQuantity\": 80,\n  \"description\": \"更新后的产品描述\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/product/updateProductByProductId?productId=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"product",
+								"updateProductByProductId"
+							],
+							"query": [
+								{
+									"key": "productId",
+									"value": "1",
+									"description": "产品ID"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据产品ID删除",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/product/deleteProductByProductId?productId=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"product",
+								"deleteProductByProductId"
+							],
+							"query": [
+								{
+									"key": "productId",
+									"value": "1",
+									"description": "产品ID"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据产品编码查询",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/product/getProductByProductCode?productCode=IP15P001",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"product",
+								"getProductByProductCode"
+							],
+							"query": [
+								{
+									"key": "productCode",
+									"value": "IP15P001",
+									"description": "产品编码"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据产品编码修改",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"price\": 9999.00,\n  \"stockQuantity\": 90\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/product/updateProductByProductCode?productCode=IP15P001",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"product",
+								"updateProductByProductCode"
+							],
+							"query": [
+								{
+									"key": "productCode",
+									"value": "IP15P001",
+									"description": "产品编码"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据产品编码删除",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/product/deleteProductByProductCode?productCode=IP15P001",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"product",
+								"deleteProductByProductCode"
+							],
+							"query": [
+								{
+									"key": "productCode",
+									"value": "IP15P001",
+									"description": "产品编码"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "产品管理相关API，包括产品的增删改查、库存管理等"
+		},
+		{
+			"name": "订单管理",
+			"item": [
+				{
+					"name": "分页查询订单列表",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pageNo\": 1,\n  \"pageSize\": 10,\n  \"userId\": 1,\n  \"status\": \"PAID\",\n  \"orderBy\": \"order_time desc\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/orderInfo/loadDataList",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orderInfo",
+								"loadDataList"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "创建订单",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orderNumber\": \"ORD20240103001\",\n  \"userId\": 1,\n  \"totalAmount\": 1299.00,\n  \"status\": \"PENDING\",\n  \"paymentMethod\": \"ALIPAY\",\n  \"shippingAddress\": {\n    \"receiver\": \"测试用户\",\n    \"phone\": \"13800138001\",\n    \"province\": \"北京市\",\n    \"city\": \"北京市\",\n    \"district\": \"朝阳区\",\n    \"address\": \"测试街道123号\",\n    \"postcode\": \"100000\"\n  },\n  \"orderItems\": [\n    {\n      \"productId\": 1,\n      \"productName\": \"iPhone 15 Pro\",\n      \"quantity\": 1,\n      \"unitPrice\": 8999.00\n    },\n    {\n      \"productId\": 2,\n      \"productName\": \"Nike运动鞋\",\n      \"quantity\": 1,\n      \"unitPrice\": 599.00\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/orderInfo/add",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orderInfo",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "批量创建订单",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n  {\n    \"orderNumber\": \"ORD20240103002\",\n    \"userId\": 2,\n    \"totalAmount\": 599.00,\n    \"status\": \"PENDING\",\n    \"paymentMethod\": \"WECHAT\",\n    \"shippingAddress\": {\n      \"receiver\": \"李四\",\n      \"phone\": \"13800138002\",\n      \"province\": \"上海市\",\n      \"city\": \"上海市\",\n      \"district\": \"浦东新区\",\n      \"address\": \"测试地址456号\",\n      \"postcode\": \"200000\"\n    },\n    \"orderItems\": [\n      {\n        \"productId\": 2,\n        \"productName\": \"Nike运动鞋\",\n        \"quantity\": 1,\n        \"unitPrice\": 599.00\n      }\n    ]\n  }\n]"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/orderInfo/addBatch",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orderInfo",
+								"addBatch"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据订单ID查询",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/orderInfo/getOrderInfoByOrderId?orderId=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orderInfo",
+								"getOrderInfoByOrderId"
+							],
+							"query": [
+								{
+									"key": "orderId",
+									"value": "1",
+									"description": "订单ID"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据订单ID更新订单状态",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"PAID\",\n  \"payTime\": \"2024-01-03 14:30:00\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/orderInfo/updateOrderInfoByOrderId?orderId=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orderInfo",
+								"updateOrderInfoByOrderId"
+							],
+							"query": [
+								{
+									"key": "orderId",
+									"value": "1",
+									"description": "订单ID"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据订单ID删除",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/orderInfo/deleteOrderInfoByOrderId?orderId=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orderInfo",
+								"deleteOrderInfoByOrderId"
+							],
+							"query": [
+								{
+									"key": "orderId",
+									"value": "1",
+									"description": "订单ID"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据订单号查询",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/orderInfo/getOrderInfoByOrderNumber?orderNumber=ORD20240101001",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orderInfo",
+								"getOrderInfoByOrderNumber"
+							],
+							"query": [
+								{
+									"key": "orderNumber",
+									"value": "ORD20240101001",
+									"description": "订单号"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据订单号更新",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"SHIPPED\",\n  \"shipTime\": \"2024-01-03 16:00:00\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/orderInfo/updateOrderInfoByOrderNumber?orderNumber=ORD20240101001",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orderInfo",
+								"updateOrderInfoByOrderNumber"
+							],
+							"query": [
+								{
+									"key": "orderNumber",
+									"value": "ORD20240101001",
+									"description": "订单号"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据订单号删除",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/orderInfo/deleteOrderInfoByOrderNumber?orderNumber=ORD20240101001",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orderInfo",
+								"deleteOrderInfoByOrderNumber"
+							],
+							"query": [
+								{
+									"key": "orderNumber",
+									"value": "ORD20240101001",
+									"description": "订单号"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "订单管理相关API，包括订单的创建、查询、状态更新等，包含JSON字段的复杂数据结构"
+		},
+		{
+			"name": "订单详情管理",
+			"item": [
+				{
+					"name": "分页查询订单详情列表",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pageNo\": 1,\n  \"pageSize\": 10,\n  \"orderId\": 1,\n  \"productId\": 1,\n  \"orderBy\": \"create_time desc\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/orderDetail/loadDataList",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orderDetail",
+								"loadDataList"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "添加订单详情",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orderId\": 1,\n  \"productId\": 1,\n  \"quantity\": 2,\n  \"unitPrice\": 8999.00,\n  \"totalPrice\": 17998.00\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/orderDetail/add",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orderDetail",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "批量添加订单详情",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n  {\n    \"orderId\": 1,\n    \"productId\": 2,\n    \"quantity\": 1,\n    \"unitPrice\": 599.00,\n    \"totalPrice\": 599.00\n  },\n  {\n    \"orderId\": 1,\n    \"productId\": 3,\n    \"quantity\": 3,\n    \"unitPrice\": 89.00,\n    \"totalPrice\": 267.00\n  }\n]"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/orderDetail/addBatch",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orderDetail",
+								"addBatch"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据详情ID查询",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/orderDetail/getOrderDetailByDetailId?detailId=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orderDetail",
+								"getOrderDetailByDetailId"
+							],
+							"query": [
+								{
+									"key": "detailId",
+									"value": "1",
+									"description": "详情ID"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据详情ID修改",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"quantity\": 3,\n  \"totalPrice\": 26997.00\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/orderDetail/updateOrderDetailByDetailId?detailId=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orderDetail",
+								"updateOrderDetailByDetailId"
+							],
+							"query": [
+								{
+									"key": "detailId",
+									"value": "1",
+									"description": "详情ID"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据详情ID删除",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/orderDetail/deleteOrderDetailByDetailId?detailId=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orderDetail",
+								"deleteOrderDetailByDetailId"
+							],
+							"query": [
+								{
+									"key": "detailId",
+									"value": "1",
+									"description": "详情ID"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据订单ID和产品ID查询",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/orderDetail/getOrderDetailByOrderIdAndProductId?orderId=1&productId=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orderDetail",
+								"getOrderDetailByOrderIdAndProductId"
+							],
+							"query": [
+								{
+									"key": "orderId",
+									"value": "1",
+									"description": "订单ID"
+								},
+								{
+									"key": "productId",
+									"value": "1",
+									"description": "产品ID"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据订单ID和产品ID修改",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"quantity\": 5,\n  \"unitPrice\": 8500.00,\n  \"totalPrice\": 42500.00\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/orderDetail/updateOrderDetailByOrderIdAndProductId?orderId=1&productId=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orderDetail",
+								"updateOrderDetailByOrderIdAndProductId"
+							],
+							"query": [
+								{
+									"key": "orderId",
+									"value": "1",
+									"description": "订单ID"
+								},
+								{
+									"key": "productId",
+									"value": "1",
+									"description": "产品ID"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据订单ID和产品ID删除",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/orderDetail/deleteOrderDetailByOrderIdAndProductId?orderId=1&productId=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orderDetail",
+								"deleteOrderDetailByOrderIdAndProductId"
+							],
+							"query": [
+								{
+									"key": "orderId",
+									"value": "1",
+									"description": "订单ID"
+								},
+								{
+									"key": "productId",
+									"value": "1",
+									"description": "产品ID"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "订单详情管理相关API，处理订单中具体商品的详细信息，支持复合主键操作"
+		},
+		{
+			"name": "系统配置管理",
+			"item": [
+				{
+					"name": "分页查询系统配置列表",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pageNo\": 1,\n  \"pageSize\": 10,\n  \"configKey\": \"\",\n  \"configType\": \"STRING\",\n  \"isSystem\": 0,\n  \"orderBy\": \"create_time desc\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/systemConfig/loadDataList",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"systemConfig",
+								"loadDataList"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "添加系统配置",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"configKey\": \"test.config.key\",\n  \"configValue\": \"测试配置值\",\n  \"configType\": \"STRING\",\n  \"isSystem\": 0,\n  \"description\": \"测试配置项\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/systemConfig/add",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"systemConfig",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "批量添加系统配置",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n  {\n    \"configKey\": \"batch.config1\",\n    \"configValue\": \"100\",\n    \"configType\": \"NUMBER\",\n    \"isSystem\": 0,\n    \"description\": \"批量配置1\"\n  },\n  {\n    \"configKey\": \"batch.config2\",\n    \"configValue\": \"true\",\n    \"configType\": \"BOOLEAN\",\n    \"isSystem\": 0,\n    \"description\": \"批量配置2\"\n  },\n  {\n    \"configKey\": \"batch.config3\",\n    \"configValue\": \"[\\\"item1\\\", \\\"item2\\\", \\\"item3\\\"]\",\n    \"configType\": \"JSON\",\n    \"isSystem\": 0,\n    \"description\": \"批量配置3\"\n  }\n]"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/systemConfig/addBatch",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"systemConfig",
+								"addBatch"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据配置ID查询",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/systemConfig/getSystemConfigByConfigId?configId=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"systemConfig",
+								"getSystemConfigByConfigId"
+							],
+							"query": [
+								{
+									"key": "configId",
+									"value": "1",
+									"description": "配置ID"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据配置ID修改",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"configValue\": \"修改后的配置值\",\n  \"description\": \"修改后的描述\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/systemConfig/updateSystemConfigByConfigId?configId=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"systemConfig",
+								"updateSystemConfigByConfigId"
+							],
+							"query": [
+								{
+									"key": "configId",
+									"value": "1",
+									"description": "配置ID"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据配置ID删除",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/systemConfig/deleteSystemConfigByConfigId?configId=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"systemConfig",
+								"deleteSystemConfigByConfigId"
+							],
+							"query": [
+								{
+									"key": "configId",
+									"value": "1",
+									"description": "配置ID"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据配置键查询",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/systemConfig/getSystemConfigByConfigKey?configKey=system.name",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"systemConfig",
+								"getSystemConfigByConfigKey"
+							],
+							"query": [
+								{
+									"key": "configKey",
+									"value": "system.name",
+									"description": "配置键"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据配置键修改",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"configValue\": \"EasyJava测试系统v2.0\",\n  \"description\": \"更新后的系统名称\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/systemConfig/updateSystemConfigByConfigKey?configKey=system.name",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"systemConfig",
+								"updateSystemConfigByConfigKey"
+							],
+							"query": [
+								{
+									"key": "configKey",
+									"value": "system.name",
+									"description": "配置键"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "根据配置键删除",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/systemConfig/deleteSystemConfigByConfigKey?configKey=system.name",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"systemConfig",
+								"deleteSystemConfigByConfigKey"
+							],
+							"query": [
+								{
+									"key": "configKey",
+									"value": "system.name",
+									"description": "配置键"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "系统配置管理相关API，支持不同类型的配置值（字符串、数字、布尔值、JSON），用于管理系统参数"
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string",
+			"description": "API服务的基础URL"
+		}
+	]
+}

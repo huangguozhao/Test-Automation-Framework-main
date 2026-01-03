@@ -1,0 +1,164 @@
+- baseInfo:
+    api_name: 分页查询订单列表
+    url: http://localhost:8080/orderInfo/loadDataList
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常分页查询订单列表
+      json:
+        pageNo: 1
+        pageSize: 10
+        userId: 1
+        status: "PAID"
+        orderBy: "order_time desc"
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 创建订单
+    url: http://localhost:8080/orderInfo/add
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常创建订单
+      json:
+        orderNumber: "ORD20240103001"
+        userId: 1
+        totalAmount: 1299.00
+        status: "PENDING"
+        paymentMethod: "ALIPAY"
+        shippingAddress:
+          receiver: "测试用户"
+          phone: "13800138001"
+          province: "北京市"
+          city: "北京市"
+          district: "朝阳区"
+          address: "测试街道123号"
+          postcode: "100000"
+        orderItems:
+          - productId: 1
+            productName: "iPhone 15 Pro"
+            quantity: 1
+            unitPrice: 8999.00
+          - productId: 2
+            productName: "Nike运动鞋"
+            quantity: 1
+            unitPrice: 599.00
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 批量创建订单
+    url: http://localhost:8080/orderInfo/addBatch
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常批量创建订单
+      json:
+        - orderNumber: "ORD20240103002"
+          userId: 2
+          totalAmount: 599.00
+          status: "PENDING"
+          paymentMethod: "WECHAT"
+          shippingAddress:
+            receiver: "李四"
+            phone: "13800138002"
+            province: "上海市"
+            city: "上海市"
+            district: "浦东新区"
+            address: "测试地址456号"
+            postcode: "200000"
+          orderItems:
+            - productId: 2
+              productName: "Nike运动鞋"
+              quantity: 1
+              unitPrice: 599.00
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据订单ID查询
+    url: http://localhost:8080/orderInfo/getOrderInfoByOrderId
+    method: GET
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 根据存在的订单ID查询
+      params:
+        orderId: 1
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据订单ID更新订单状态
+    url: http://localhost:8080/orderInfo/updateOrderInfoByOrderId
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常更新订单状态
+      json:
+        status: "PAID"
+        payTime: "2024-01-03 14:30:00"
+      params:
+        orderId: 1
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据订单ID删除
+    url: http://localhost:8080/orderInfo/deleteOrderInfoByOrderId
+    method: DELETE
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常删除订单
+      params:
+        orderId: 1
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据订单号查询
+    url: http://localhost:8080/orderInfo/getOrderInfoByOrderNumber
+    method: GET
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 根据存在的订单号查询
+      params:
+        orderNumber: ORD20240101001
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据订单号更新
+    url: http://localhost:8080/orderInfo/updateOrderInfoByOrderNumber
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常根据订单号更新
+      json:
+        status: "SHIPPED"
+        shipTime: "2024-01-03 16:00:00"
+      params:
+        orderNumber: ORD20240101001
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据订单号删除
+    url: http://localhost:8080/orderInfo/deleteOrderInfoByOrderNumber
+    method: DELETE
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常根据订单号删除
+      params:
+        orderNumber: ORD20240101001
+      validation:
+        - contains: { 'status': 'success' }

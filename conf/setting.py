@@ -41,3 +41,6 @@ LOGIN_HEADER = {
     'Accept-Language': 'zh-CN,zh;q=0.9',
     'Connection': 'keep-alive'
 }
+
+# API基础URL
+API_URL = 'http://localhost:8080'

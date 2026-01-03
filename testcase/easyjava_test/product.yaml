@@ -1,0 +1,147 @@
+- baseInfo:
+    api_name: 分页查询产品列表
+    url: http://localhost:8080/product/loadDataList
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常分页查询产品列表
+      json:
+        pageNo: 1
+        pageSize: 10
+        productName: ""
+        category: ""
+        status: "ACTIVE"
+        orderBy: "create_time desc"
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 新增产品
+    url: http://localhost:8080/product/add
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常新增产品
+      json:
+        productName: "测试商品001"
+        productCode: "TEST001"
+        category: "ELECTRONICS"
+        price: 99.99
+        stockQuantity: 100
+        status: "ACTIVE"
+        description: "这是一个测试商品"
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 批量新增产品
+    url: http://localhost:8080/product/addBatch
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常批量新增产品
+      json:
+        - productName: "批量商品001"
+          productCode: "BATCH001"
+          category: "CLOTHING"
+          price: 199.99
+          stockQuantity: 50
+          status: "ACTIVE"
+          description: "批量测试商品001"
+        - productName: "批量商品002"
+          productCode: "BATCH002"
+          category: "FOOD"
+          price: 29.99
+          stockQuantity: 200
+          status: "ACTIVE"
+          description: "批量测试商品002"
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据产品ID查询
+    url: http://localhost:8080/product/getProductByProductId
+    method: GET
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 根据存在的产品ID查询
+      params:
+        productId: 1
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据产品ID修改
+    url: http://localhost:8080/product/updateProductByProductId
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常修改产品信息
+      json:
+        price: 129.99
+        stockQuantity: 80
+        description: "更新后的产品描述"
+      params:
+        productId: 1
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据产品ID删除
+    url: http://localhost:8080/product/deleteProductByProductId
+    method: DELETE
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常删除产品
+      params:
+        productId: 1
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据产品编码查询
+    url: http://localhost:8080/product/getProductByProductCode
+    method: GET
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 根据存在的产品编码查询
+      params:
+        productCode: IP15P001
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据产品编码修改
+    url: http://localhost:8080/product/updateProductByProductCode
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常根据产品编码修改
+      json:
+        price: 9999.00
+        stockQuantity: 90
+      params:
+        productCode: IP15P001
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据产品编码删除
+    url: http://localhost:8080/product/deleteProductByProductCode
+    method: DELETE
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常根据产品编码删除
+      params:
+        productCode: IP15P001
+      validation:
+        - contains: { 'status': 'success' }

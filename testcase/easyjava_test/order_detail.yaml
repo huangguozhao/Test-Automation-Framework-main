@@ -1,0 +1,143 @@
+- baseInfo:
+    api_name: 分页查询订单详情列表
+    url: http://localhost:8080/orderDetail/loadDataList
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常分页查询订单详情列表
+      json:
+        pageNo: 1
+        pageSize: 10
+        orderId: 1
+        productId: 1
+        orderBy: "create_time desc"
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 添加订单详情
+    url: http://localhost:8080/orderDetail/add
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常添加订单详情
+      json:
+        orderId: 1
+        productId: 1
+        quantity: 2
+        unitPrice: 8999.00
+        totalPrice: 17998.00
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 批量添加订单详情
+    url: http://localhost:8080/orderDetail/addBatch
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常批量添加订单详情
+      json:
+        - orderId: 1
+          productId: 2
+          quantity: 1
+          unitPrice: 599.00
+          totalPrice: 599.00
+        - orderId: 1
+          productId: 3
+          quantity: 3
+          unitPrice: 89.00
+          totalPrice: 267.00
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据详情ID查询
+    url: http://localhost:8080/orderDetail/getOrderDetailByDetailId
+    method: GET
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 根据存在的详情ID查询
+      params:
+        detailId: 1
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据详情ID修改
+    url: http://localhost:8080/orderDetail/updateOrderDetailByDetailId
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常根据详情ID修改
+      json:
+        quantity: 3
+        totalPrice: 26997.00
+      params:
+        detailId: 1
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据详情ID删除
+    url: http://localhost:8080/orderDetail/deleteOrderDetailByDetailId
+    method: DELETE
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常根据详情ID删除
+      params:
+        detailId: 1
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据订单ID和产品ID查询
+    url: http://localhost:8080/orderDetail/getOrderDetailByOrderIdAndProductId
+    method: GET
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 根据存在的订单ID和产品ID查询
+      params:
+        orderId: 1
+        productId: 1
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据订单ID和产品ID修改
+    url: http://localhost:8080/orderDetail/updateOrderDetailByOrderIdAndProductId
+    method: POST
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常根据订单ID和产品ID修改
+      json:
+        quantity: 5
+        unitPrice: 8500.00
+        totalPrice: 42500.00
+      params:
+        orderId: 1
+        productId: 1
+      validation:
+        - contains: { 'status': 'success' }
+
+- baseInfo:
+    api_name: 根据订单ID和产品ID删除
+    url: http://localhost:8080/orderDetail/deleteOrderDetailByOrderIdAndProductId
+    method: DELETE
+    header:
+      Content-Type: application/json
+  testCase:
+    - case_name: 正常根据订单ID和产品ID删除
+      params:
+        orderId: 1
+        productId: 1
+      validation:
+        - contains: { 'status': 'success' }

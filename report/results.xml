@@ -1,1217 +1,540 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="19" failures="0" skipped="0" tests="19" time="1.593" timestamp="2025-12-20T01:31:51.613375+08:00" hostname="Victor"><testcase classname="testcase.Business interface.test_business_scenario.TestEBusinessScenario" name="test_business_scenario[case_info0]" time="0.034"><error message="failed on setup with &quot;SystemExit: None&quot;">@pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-&gt;           RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="7" skipped="0" tests="10" time="1.398" timestamp="2026-01-02T14:16:16.106514+08:00" hostname="Victor"><testcase classname="testcase.easyjava_test.test_user.TestUserManagement" name="test_user_api[case_data0]" time="0.036"><failure message="AssertionError">self = &lt;test_user.TestUserManagement object at 0x000002B6792E7750&gt;
+case_data = {'baseInfo': {'api_name': '查询用户列表（分页）', 'header': {'Content-Type': 'application/json'}, 'method': 'POST', 'url': 'http...case_name': '正常分页查询用户列表', 'json': {'pageNo': 1, 'pageSize': 10}, 'validation': [{'contains': {'status': 'success'}}]}]}
 
-testcase\conftest.py:30: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-base\apiutil.py:119: in specification_yaml
-    raise e
-base\apiutil.py:116: in specification_yaml
-    raise e
-base\apiutil.py:110: in specification_yaml
-    self.asserts.assert_result(validation, res_json, status_code)
-common\assertions.py:195: in assert_result
-    raise exceptions
-common\assertions.py:176: in assert_result
-    flag = self.contains_assert(value, response, status_code)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+    @pytest.mark.parametrize("case_data", get_testcase_yaml("testcase/easyjava_test/user.yaml"))
+    def test_user_api(self, case_data):
+        """
+        用户管理接口测试
+        """
+        # 检查数据结构并正确获取测试用例信息
+        if isinstance(case_data, list) and len(case_data) == 2:
+            # 框架转换后的格式 [base_info, test_case]
+            base_info = case_data[0]
+            test_case = case_data[1]
+        elif isinstance(case_data, dict) and 'baseInfo' in case_data:
+            # 原始YAML格式
+            base_info = case_data['baseInfo']
+            # 遍历所有测试用例
+            for test_case in case_data['testCase']:
+&gt;               self._run_test_case(base_info, test_case)
 
-self = &lt;common.assertions.Assertions object at 0x000001CAA6F57610&gt;
-value = {'msg_code': 200}
-response = {'error_code': None, 'msg': '登录成功', 'msg_code': 200, 'orgId': '6140913758128971280', ...}
+testcase\easyjava_test\test_user.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+testcase\easyjava_test\test_user.py:71: in _run_test_case
+    assertions.assert_result(test_case.get("validation", []), response_json, response.status_code)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;common.assertions.Assertions object at 0x000002B656BEB0E0&gt;
+expected = [{'contains': {'status': 'success'}}]
+response = {'code': 500, 'data': None, 'info': '服务器返回错误，请联系管理员', 'status': 'error'}
 status_code = 200
 
-    def contains_assert(self, value, response, status_code):
+    def assert_result(self, expected, response, status_code):
         """
-        字符串包含断言模式，断言预期结果的字符串是否包含在接口的响应信息中
-        :param value: 预期结果，yaml文件的预期结果值
-        :param response: 接口实际响应结果
-        :param status_code: 响应状态码
-        :return: 返回结果的状态标识
+        断言，通过断言all_flag标记，all_flag==0表示测试通过，否则为失败
+        :param expected: 预期结果
+        :param response: 实际响应结果
+        :param status_code: 响应code码
+        :return:
         """
-        # 断言状态标识，0成功，其他失败
-        flag = 0
-        for assert_key, assert_value in value.items():
-            if assert_key == "status_code":
-                if assert_value != status_code:
-                    flag += 1
-                    allure.attach(f"预期结果：{assert_value}\n实际结果：{status_code}", '响应代码断言结果:失败',
-                                  attachment_type=allure.attachment_type.TEXT)
-                    logs.error("contains断言失败：接口返回码【%s】不等于【%s】" % (status_code, assert_value))
-            else:
-&gt;               resp_list = jsonpath.jsonpath(response, "$..%s" % assert_key)
-                            ^^^^^^^^^^^^^^^^^
-E               AttributeError: module 'jsonpath' has no attribute 'jsonpath'. Did you mean: 'JSONPath'?
-
-common\assertions.py:39: AttributeError
-
-During handling of the above exception, another exception occurred:
-
-    @pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
+        all_flag = 0
         try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-            RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-        except Exception as e:
-            logs.error(f'登录接口出现异常，导致后续接口无法继续运行，请检查程序！，{e}')
-&gt;           exit()
-E           SystemExit: None
+            logs.info("yaml文件预期结果：%s" % expected)
+            # logs.info("实际结果：%s" % response)
+            # all_flag = 0
+            for yq in expected:
+                for key, value in yq.items():
+                    if key == "contains":
+                        flag = self.contains_assert(value, response, status_code)
+                        all_flag = all_flag + flag
+                    elif key == "eq":
+                        flag = self.equal_assert(value, response)
+                        all_flag = all_flag + flag
+                    elif key == 'ne':
+                        flag = self.not_equal_assert(value, response)
+                        all_flag = all_flag + flag
+                    elif key == 'rv':
+                        flag = self.assert_response_any(actual_results=response, expected_results=value)
+                        all_flag = all_flag + flag
+                    elif key == 'db':
+                        flag = self.assert_mysql_data(value)
+                        all_flag = all_flag + flag
+                    else:
+                        logs.error("不支持此种断言方式")
+    
+        except Exception as exceptions:
+            logs.error('接口断言异常，请检查yaml预期结果值是否正确填写!')
+            raise exceptions
+    
+        if all_flag == 0:
+            logs.info("测试成功")
+            assert True
+        else:
+            logs.error("测试失败")
+&gt;           assert False
+                   ^^^^^
+E           AssertionError
 
-testcase\conftest.py:33: SystemExit</error></testcase><testcase classname="testcase.Business interface.test_business_scenario.TestEBusinessScenario" name="test_business_scenario[case_info1]" time="0.047"><error message="failed on setup with &quot;SystemExit: None&quot;">@pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-&gt;           RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
+common\assertions.py:242: AssertionError</failure></testcase><testcase classname="testcase.easyjava_test.test_user.TestUserManagement" name="test_user_api[case_data1]" time="0.030"><failure message="AssertionError">self = &lt;test_user.TestUserManagement object at 0x000002B6792E7610&gt;
+case_data = {'baseInfo': {'api_name': '根据用户名查询用户', 'header': {'Content-Type': 'application/json'}, 'method': 'POST', 'url': 'http:...'testCase': [{'case_name': '根据存在的用户ID查询', 'json': {'userId': 1}, 'validation': [{'contains': {'status': 'success'}}]}]}
 
-testcase\conftest.py:30: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-base\apiutil.py:119: in specification_yaml
-    raise e
-base\apiutil.py:116: in specification_yaml
-    raise e
-base\apiutil.py:110: in specification_yaml
-    self.asserts.assert_result(validation, res_json, status_code)
-common\assertions.py:195: in assert_result
-    raise exceptions
-common\assertions.py:176: in assert_result
-    flag = self.contains_assert(value, response, status_code)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+    @pytest.mark.parametrize("case_data", get_testcase_yaml("testcase/easyjava_test/user.yaml"))
+    def test_user_api(self, case_data):
+        """
+        用户管理接口测试
+        """
+        # 检查数据结构并正确获取测试用例信息
+        if isinstance(case_data, list) and len(case_data) == 2:
+            # 框架转换后的格式 [base_info, test_case]
+            base_info = case_data[0]
+            test_case = case_data[1]
+        elif isinstance(case_data, dict) and 'baseInfo' in case_data:
+            # 原始YAML格式
+            base_info = case_data['baseInfo']
+            # 遍历所有测试用例
+            for test_case in case_data['testCase']:
+&gt;               self._run_test_case(base_info, test_case)
 
-self = &lt;common.assertions.Assertions object at 0x000001CAA6FFA210&gt;
-value = {'msg_code': 200}
-response = {'error_code': None, 'msg': '登录成功', 'msg_code': 200, 'orgId': '6140913758128971280', ...}
+testcase\easyjava_test\test_user.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+testcase\easyjava_test\test_user.py:71: in _run_test_case
+    assertions.assert_result(test_case.get("validation", []), response_json, response.status_code)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;common.assertions.Assertions object at 0x000002B67939D6D0&gt;
+expected = [{'contains': {'status': 'success'}}]
+response = {'code': 500, 'data': None, 'info': '服务器返回错误，请联系管理员', 'status': 'error'}
 status_code = 200
 
-    def contains_assert(self, value, response, status_code):
+    def assert_result(self, expected, response, status_code):
         """
-        字符串包含断言模式，断言预期结果的字符串是否包含在接口的响应信息中
-        :param value: 预期结果，yaml文件的预期结果值
-        :param response: 接口实际响应结果
-        :param status_code: 响应状态码
-        :return: 返回结果的状态标识
+        断言，通过断言all_flag标记，all_flag==0表示测试通过，否则为失败
+        :param expected: 预期结果
+        :param response: 实际响应结果
+        :param status_code: 响应code码
+        :return:
         """
-        # 断言状态标识，0成功，其他失败
-        flag = 0
-        for assert_key, assert_value in value.items():
-            if assert_key == "status_code":
-                if assert_value != status_code:
-                    flag += 1
-                    allure.attach(f"预期结果：{assert_value}\n实际结果：{status_code}", '响应代码断言结果:失败',
-                                  attachment_type=allure.attachment_type.TEXT)
-                    logs.error("contains断言失败：接口返回码【%s】不等于【%s】" % (status_code, assert_value))
-            else:
-&gt;               resp_list = jsonpath.jsonpath(response, "$..%s" % assert_key)
-                            ^^^^^^^^^^^^^^^^^
-E               AttributeError: module 'jsonpath' has no attribute 'jsonpath'. Did you mean: 'JSONPath'?
-
-common\assertions.py:39: AttributeError
-
-During handling of the above exception, another exception occurred:
-
-    @pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
+        all_flag = 0
         try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-            RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-        except Exception as e:
-            logs.error(f'登录接口出现异常，导致后续接口无法继续运行，请检查程序！，{e}')
-&gt;           exit()
-E           SystemExit: None
+            logs.info("yaml文件预期结果：%s" % expected)
+            # logs.info("实际结果：%s" % response)
+            # all_flag = 0
+            for yq in expected:
+                for key, value in yq.items():
+                    if key == "contains":
+                        flag = self.contains_assert(value, response, status_code)
+                        all_flag = all_flag + flag
+                    elif key == "eq":
+                        flag = self.equal_assert(value, response)
+                        all_flag = all_flag + flag
+                    elif key == 'ne':
+                        flag = self.not_equal_assert(value, response)
+                        all_flag = all_flag + flag
+                    elif key == 'rv':
+                        flag = self.assert_response_any(actual_results=response, expected_results=value)
+                        all_flag = all_flag + flag
+                    elif key == 'db':
+                        flag = self.assert_mysql_data(value)
+                        all_flag = all_flag + flag
+                    else:
+                        logs.error("不支持此种断言方式")
+    
+        except Exception as exceptions:
+            logs.error('接口断言异常，请检查yaml预期结果值是否正确填写!')
+            raise exceptions
+    
+        if all_flag == 0:
+            logs.info("测试成功")
+            assert True
+        else:
+            logs.error("测试失败")
+&gt;           assert False
+                   ^^^^^
+E           AssertionError
 
-testcase\conftest.py:33: SystemExit</error></testcase><testcase classname="testcase.Business interface.test_business_scenario.TestEBusinessScenario" name="test_business_scenario[case_info2]" time="0.037"><error message="failed on setup with &quot;SystemExit: None&quot;">@pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-&gt;           RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
+common\assertions.py:242: AssertionError</failure></testcase><testcase classname="testcase.easyjava_test.test_user.TestUserManagement" name="test_user_api[case_data2]" time="0.029"><failure message="AssertionError">self = &lt;test_user.TestUserManagement object at 0x000002B6792CB950&gt;
+case_data = {'baseInfo': {'api_name': '新增用户', 'header': {'Content-Type': 'application/json'}, 'method': 'POST', 'url': 'http://loc... 'newuser@example.com', 'gender': 1, 'password': '123456', ...}, 'validation': [{'contains': {'status': 'success'}}]}]}
 
-testcase\conftest.py:30: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-base\apiutil.py:119: in specification_yaml
-    raise e
-base\apiutil.py:116: in specification_yaml
-    raise e
-base\apiutil.py:110: in specification_yaml
-    self.asserts.assert_result(validation, res_json, status_code)
-common\assertions.py:195: in assert_result
-    raise exceptions
-common\assertions.py:176: in assert_result
-    flag = self.contains_assert(value, response, status_code)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+    @pytest.mark.parametrize("case_data", get_testcase_yaml("testcase/easyjava_test/user.yaml"))
+    def test_user_api(self, case_data):
+        """
+        用户管理接口测试
+        """
+        # 检查数据结构并正确获取测试用例信息
+        if isinstance(case_data, list) and len(case_data) == 2:
+            # 框架转换后的格式 [base_info, test_case]
+            base_info = case_data[0]
+            test_case = case_data[1]
+        elif isinstance(case_data, dict) and 'baseInfo' in case_data:
+            # 原始YAML格式
+            base_info = case_data['baseInfo']
+            # 遍历所有测试用例
+            for test_case in case_data['testCase']:
+&gt;               self._run_test_case(base_info, test_case)
 
-self = &lt;common.assertions.Assertions object at 0x000001CAA7044E90&gt;
-value = {'msg_code': 200}
-response = {'error_code': None, 'msg': '登录成功', 'msg_code': 200, 'orgId': '6140913758128971280', ...}
+testcase\easyjava_test\test_user.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+testcase\easyjava_test\test_user.py:71: in _run_test_case
+    assertions.assert_result(test_case.get("validation", []), response_json, response.status_code)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;common.assertions.Assertions object at 0x000002B67939E5D0&gt;
+expected = [{'contains': {'status': 'success'}}]
+response = {'code': 500, 'data': None, 'info': '服务器返回错误，请联系管理员', 'status': 'error'}
 status_code = 200
 
-    def contains_assert(self, value, response, status_code):
+    def assert_result(self, expected, response, status_code):
         """
-        字符串包含断言模式，断言预期结果的字符串是否包含在接口的响应信息中
-        :param value: 预期结果，yaml文件的预期结果值
-        :param response: 接口实际响应结果
-        :param status_code: 响应状态码
-        :return: 返回结果的状态标识
+        断言，通过断言all_flag标记，all_flag==0表示测试通过，否则为失败
+        :param expected: 预期结果
+        :param response: 实际响应结果
+        :param status_code: 响应code码
+        :return:
         """
-        # 断言状态标识，0成功，其他失败
-        flag = 0
-        for assert_key, assert_value in value.items():
-            if assert_key == "status_code":
-                if assert_value != status_code:
-                    flag += 1
-                    allure.attach(f"预期结果：{assert_value}\n实际结果：{status_code}", '响应代码断言结果:失败',
-                                  attachment_type=allure.attachment_type.TEXT)
-                    logs.error("contains断言失败：接口返回码【%s】不等于【%s】" % (status_code, assert_value))
-            else:
-&gt;               resp_list = jsonpath.jsonpath(response, "$..%s" % assert_key)
-                            ^^^^^^^^^^^^^^^^^
-E               AttributeError: module 'jsonpath' has no attribute 'jsonpath'. Did you mean: 'JSONPath'?
-
-common\assertions.py:39: AttributeError
-
-During handling of the above exception, another exception occurred:
-
-    @pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
+        all_flag = 0
         try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-            RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-        except Exception as e:
-            logs.error(f'登录接口出现异常，导致后续接口无法继续运行，请检查程序！，{e}')
-&gt;           exit()
-E           SystemExit: None
+            logs.info("yaml文件预期结果：%s" % expected)
+            # logs.info("实际结果：%s" % response)
+            # all_flag = 0
+            for yq in expected:
+                for key, value in yq.items():
+                    if key == "contains":
+                        flag = self.contains_assert(value, response, status_code)
+                        all_flag = all_flag + flag
+                    elif key == "eq":
+                        flag = self.equal_assert(value, response)
+                        all_flag = all_flag + flag
+                    elif key == 'ne':
+                        flag = self.not_equal_assert(value, response)
+                        all_flag = all_flag + flag
+                    elif key == 'rv':
+                        flag = self.assert_response_any(actual_results=response, expected_results=value)
+                        all_flag = all_flag + flag
+                    elif key == 'db':
+                        flag = self.assert_mysql_data(value)
+                        all_flag = all_flag + flag
+                    else:
+                        logs.error("不支持此种断言方式")
+    
+        except Exception as exceptions:
+            logs.error('接口断言异常，请检查yaml预期结果值是否正确填写!')
+            raise exceptions
+    
+        if all_flag == 0:
+            logs.info("测试成功")
+            assert True
+        else:
+            logs.error("测试失败")
+&gt;           assert False
+                   ^^^^^
+E           AssertionError
 
-testcase\conftest.py:33: SystemExit</error></testcase><testcase classname="testcase.Business interface.test_business_scenario.TestEBusinessScenario" name="test_business_scenario[case_info3]" time="0.037"><error message="failed on setup with &quot;SystemExit: None&quot;">@pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-&gt;           RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
+common\assertions.py:242: AssertionError</failure></testcase><testcase classname="testcase.easyjava_test.test_user.TestUserManagement" name="test_user_api[case_data3]" time="0.029"><failure message="AssertionError">self = &lt;test_user.TestUserManagement object at 0x000002B6792CB820&gt;
+case_data = {'baseInfo': {'api_name': '更新用户信息', 'header': {'Content-Type': 'application/json'}, 'method': 'POST', 'url': 'http://l...'13900000000', 'realName': '张三（已更新）', 'status': 0, 'userId': 1}, 'validation': [{'contains': {'status': 'success'}}]}]}
 
-testcase\conftest.py:30: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-base\apiutil.py:119: in specification_yaml
-    raise e
-base\apiutil.py:116: in specification_yaml
-    raise e
-base\apiutil.py:110: in specification_yaml
-    self.asserts.assert_result(validation, res_json, status_code)
-common\assertions.py:195: in assert_result
-    raise exceptions
-common\assertions.py:176: in assert_result
-    flag = self.contains_assert(value, response, status_code)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+    @pytest.mark.parametrize("case_data", get_testcase_yaml("testcase/easyjava_test/user.yaml"))
+    def test_user_api(self, case_data):
+        """
+        用户管理接口测试
+        """
+        # 检查数据结构并正确获取测试用例信息
+        if isinstance(case_data, list) and len(case_data) == 2:
+            # 框架转换后的格式 [base_info, test_case]
+            base_info = case_data[0]
+            test_case = case_data[1]
+        elif isinstance(case_data, dict) and 'baseInfo' in case_data:
+            # 原始YAML格式
+            base_info = case_data['baseInfo']
+            # 遍历所有测试用例
+            for test_case in case_data['testCase']:
+&gt;               self._run_test_case(base_info, test_case)
 
-self = &lt;common.assertions.Assertions object at 0x000001CAA7046D70&gt;
-value = {'msg_code': 200}
-response = {'error_code': None, 'msg': '登录成功', 'msg_code': 200, 'orgId': '4140913758110176843', ...}
+testcase\easyjava_test\test_user.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+testcase\easyjava_test\test_user.py:71: in _run_test_case
+    assertions.assert_result(test_case.get("validation", []), response_json, response.status_code)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;common.assertions.Assertions object at 0x000002B6793B6C40&gt;
+expected = [{'contains': {'status': 'success'}}]
+response = {'code': 500, 'data': None, 'info': '服务器返回错误，请联系管理员', 'status': 'error'}
 status_code = 200
 
-    def contains_assert(self, value, response, status_code):
+    def assert_result(self, expected, response, status_code):
         """
-        字符串包含断言模式，断言预期结果的字符串是否包含在接口的响应信息中
-        :param value: 预期结果，yaml文件的预期结果值
-        :param response: 接口实际响应结果
-        :param status_code: 响应状态码
-        :return: 返回结果的状态标识
+        断言，通过断言all_flag标记，all_flag==0表示测试通过，否则为失败
+        :param expected: 预期结果
+        :param response: 实际响应结果
+        :param status_code: 响应code码
+        :return:
         """
-        # 断言状态标识，0成功，其他失败
-        flag = 0
-        for assert_key, assert_value in value.items():
-            if assert_key == "status_code":
-                if assert_value != status_code:
-                    flag += 1
-                    allure.attach(f"预期结果：{assert_value}\n实际结果：{status_code}", '响应代码断言结果:失败',
-                                  attachment_type=allure.attachment_type.TEXT)
-                    logs.error("contains断言失败：接口返回码【%s】不等于【%s】" % (status_code, assert_value))
-            else:
-&gt;               resp_list = jsonpath.jsonpath(response, "$..%s" % assert_key)
-                            ^^^^^^^^^^^^^^^^^
-E               AttributeError: module 'jsonpath' has no attribute 'jsonpath'. Did you mean: 'JSONPath'?
-
-common\assertions.py:39: AttributeError
-
-During handling of the above exception, another exception occurred:
-
-    @pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
+        all_flag = 0
         try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-            RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-        except Exception as e:
-            logs.error(f'登录接口出现异常，导致后续接口无法继续运行，请检查程序！，{e}')
-&gt;           exit()
-E           SystemExit: None
+            logs.info("yaml文件预期结果：%s" % expected)
+            # logs.info("实际结果：%s" % response)
+            # all_flag = 0
+            for yq in expected:
+                for key, value in yq.items():
+                    if key == "contains":
+                        flag = self.contains_assert(value, response, status_code)
+                        all_flag = all_flag + flag
+                    elif key == "eq":
+                        flag = self.equal_assert(value, response)
+                        all_flag = all_flag + flag
+                    elif key == 'ne':
+                        flag = self.not_equal_assert(value, response)
+                        all_flag = all_flag + flag
+                    elif key == 'rv':
+                        flag = self.assert_response_any(actual_results=response, expected_results=value)
+                        all_flag = all_flag + flag
+                    elif key == 'db':
+                        flag = self.assert_mysql_data(value)
+                        all_flag = all_flag + flag
+                    else:
+                        logs.error("不支持此种断言方式")
+    
+        except Exception as exceptions:
+            logs.error('接口断言异常，请检查yaml预期结果值是否正确填写!')
+            raise exceptions
+    
+        if all_flag == 0:
+            logs.info("测试成功")
+            assert True
+        else:
+            logs.error("测试失败")
+&gt;           assert False
+                   ^^^^^
+E           AssertionError
 
-testcase\conftest.py:33: SystemExit</error></testcase><testcase classname="testcase.Business interface.test_business_scenario.TestEBusinessScenario" name="test_business_scenario[case_info4]" time="0.039"><error message="failed on setup with &quot;SystemExit: None&quot;">@pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-&gt;           RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
+common\assertions.py:242: AssertionError</failure></testcase><testcase classname="testcase.easyjava_test.test_user.TestUserManagement" name="test_user_api[case_data4]" time="0.028"><failure message="AssertionError">self = &lt;test_user.TestUserManagement object at 0x000002B679398830&gt;
+case_data = {'baseInfo': {'api_name': '删除用户', 'header': {'Content-Type': 'application/json'}, 'method': 'POST', 'url': 'http://loc...d'}, 'testCase': [{'case_name': '正常删除用户', 'json': {'userId': 4}, 'validation': [{'contains': {'status': 'success'}}]}]}
 
-testcase\conftest.py:30: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-base\apiutil.py:119: in specification_yaml
-    raise e
-base\apiutil.py:116: in specification_yaml
-    raise e
-base\apiutil.py:110: in specification_yaml
-    self.asserts.assert_result(validation, res_json, status_code)
-common\assertions.py:195: in assert_result
-    raise exceptions
-common\assertions.py:176: in assert_result
-    flag = self.contains_assert(value, response, status_code)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+    @pytest.mark.parametrize("case_data", get_testcase_yaml("testcase/easyjava_test/user.yaml"))
+    def test_user_api(self, case_data):
+        """
+        用户管理接口测试
+        """
+        # 检查数据结构并正确获取测试用例信息
+        if isinstance(case_data, list) and len(case_data) == 2:
+            # 框架转换后的格式 [base_info, test_case]
+            base_info = case_data[0]
+            test_case = case_data[1]
+        elif isinstance(case_data, dict) and 'baseInfo' in case_data:
+            # 原始YAML格式
+            base_info = case_data['baseInfo']
+            # 遍历所有测试用例
+            for test_case in case_data['testCase']:
+&gt;               self._run_test_case(base_info, test_case)
 
-self = &lt;common.assertions.Assertions object at 0x000001CAA6FCD7F0&gt;
-value = {'msg_code': 200}
-response = {'error_code': None, 'msg': '登录成功', 'msg_code': 200, 'orgId': '4140913758110176843', ...}
+testcase\easyjava_test\test_user.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+testcase\easyjava_test\test_user.py:71: in _run_test_case
+    assertions.assert_result(test_case.get("validation", []), response_json, response.status_code)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;common.assertions.Assertions object at 0x000002B6793B7CE0&gt;
+expected = [{'contains': {'status': 'success'}}]
+response = {'code': 500, 'data': None, 'info': '服务器返回错误，请联系管理员', 'status': 'error'}
 status_code = 200
 
-    def contains_assert(self, value, response, status_code):
+    def assert_result(self, expected, response, status_code):
         """
-        字符串包含断言模式，断言预期结果的字符串是否包含在接口的响应信息中
-        :param value: 预期结果，yaml文件的预期结果值
-        :param response: 接口实际响应结果
-        :param status_code: 响应状态码
-        :return: 返回结果的状态标识
+        断言，通过断言all_flag标记，all_flag==0表示测试通过，否则为失败
+        :param expected: 预期结果
+        :param response: 实际响应结果
+        :param status_code: 响应code码
+        :return:
         """
-        # 断言状态标识，0成功，其他失败
-        flag = 0
-        for assert_key, assert_value in value.items():
-            if assert_key == "status_code":
-                if assert_value != status_code:
-                    flag += 1
-                    allure.attach(f"预期结果：{assert_value}\n实际结果：{status_code}", '响应代码断言结果:失败',
-                                  attachment_type=allure.attachment_type.TEXT)
-                    logs.error("contains断言失败：接口返回码【%s】不等于【%s】" % (status_code, assert_value))
-            else:
-&gt;               resp_list = jsonpath.jsonpath(response, "$..%s" % assert_key)
-                            ^^^^^^^^^^^^^^^^^
-E               AttributeError: module 'jsonpath' has no attribute 'jsonpath'. Did you mean: 'JSONPath'?
-
-common\assertions.py:39: AttributeError
-
-During handling of the above exception, another exception occurred:
-
-    @pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
+        all_flag = 0
         try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-            RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-        except Exception as e:
-            logs.error(f'登录接口出现异常，导致后续接口无法继续运行，请检查程序！，{e}')
-&gt;           exit()
-E           SystemExit: None
+            logs.info("yaml文件预期结果：%s" % expected)
+            # logs.info("实际结果：%s" % response)
+            # all_flag = 0
+            for yq in expected:
+                for key, value in yq.items():
+                    if key == "contains":
+                        flag = self.contains_assert(value, response, status_code)
+                        all_flag = all_flag + flag
+                    elif key == "eq":
+                        flag = self.equal_assert(value, response)
+                        all_flag = all_flag + flag
+                    elif key == 'ne':
+                        flag = self.not_equal_assert(value, response)
+                        all_flag = all_flag + flag
+                    elif key == 'rv':
+                        flag = self.assert_response_any(actual_results=response, expected_results=value)
+                        all_flag = all_flag + flag
+                    elif key == 'db':
+                        flag = self.assert_mysql_data(value)
+                        all_flag = all_flag + flag
+                    else:
+                        logs.error("不支持此种断言方式")
+    
+        except Exception as exceptions:
+            logs.error('接口断言异常，请检查yaml预期结果值是否正确填写!')
+            raise exceptions
+    
+        if all_flag == 0:
+            logs.info("测试成功")
+            assert True
+        else:
+            logs.error("测试失败")
+&gt;           assert False
+                   ^^^^^
+E           AssertionError
 
-testcase\conftest.py:33: SystemExit</error></testcase><testcase classname="testcase.ProductManager.test_productList.TestLogin" name="test_get_product_list[base_info0-testcase0]" time="0.026"><error message="failed on setup with &quot;SystemExit: None&quot;">@pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-&gt;           RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
+common\assertions.py:242: AssertionError</failure></testcase><testcase classname="testcase.easyjava_test.test_user.TestUserManagement" name="test_user_api[case_data5]" time="0.025" /><testcase classname="testcase.easyjava_test.test_user.TestUserManagement" name="test_user_api[case_data6]" time="0.029" /><testcase classname="testcase.easyjava_test.test_user.TestUserManagement" name="test_user_api[case_data7]" time="0.029" /><testcase classname="testcase.easyjava_test.test_user.TestUserManagement" name="test_user_api[case_data8]" time="0.033"><failure message="AssertionError">self = &lt;test_user.TestUserManagement object at 0x000002B679312C50&gt;
+case_data = {'baseInfo': {'api_name': '分页查询边界测试', 'header': {'Content-Type': 'application/json'}, 'method': 'POST', 'url': 'http:/...name': '超大pageSize的情况', 'json': {'pageNo': 1, 'pageSize': 1000}, 'validation': [{'contains': {'status': 'success'}}]}]}
 
-testcase\conftest.py:30: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-base\apiutil.py:119: in specification_yaml
-    raise e
-base\apiutil.py:116: in specification_yaml
-    raise e
-base\apiutil.py:110: in specification_yaml
-    self.asserts.assert_result(validation, res_json, status_code)
-common\assertions.py:195: in assert_result
-    raise exceptions
-common\assertions.py:176: in assert_result
-    flag = self.contains_assert(value, response, status_code)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+    @pytest.mark.parametrize("case_data", get_testcase_yaml("testcase/easyjava_test/user.yaml"))
+    def test_user_api(self, case_data):
+        """
+        用户管理接口测试
+        """
+        # 检查数据结构并正确获取测试用例信息
+        if isinstance(case_data, list) and len(case_data) == 2:
+            # 框架转换后的格式 [base_info, test_case]
+            base_info = case_data[0]
+            test_case = case_data[1]
+        elif isinstance(case_data, dict) and 'baseInfo' in case_data:
+            # 原始YAML格式
+            base_info = case_data['baseInfo']
+            # 遍历所有测试用例
+            for test_case in case_data['testCase']:
+&gt;               self._run_test_case(base_info, test_case)
 
-self = &lt;common.assertions.Assertions object at 0x000001CAA7112690&gt;
-value = {'msg_code': 200}
-response = {'error_code': None, 'msg': '登录成功', 'msg_code': 200, 'orgId': '4140913758110176843', ...}
+testcase\easyjava_test\test_user.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+testcase\easyjava_test\test_user.py:71: in _run_test_case
+    assertions.assert_result(test_case.get("validation", []), response_json, response.status_code)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;common.assertions.Assertions object at 0x000002B679403150&gt;
+expected = [{'contains': {'status': 'success'}}]
+response = {'code': 500, 'data': None, 'info': '服务器返回错误，请联系管理员', 'status': 'error'}
 status_code = 200
 
-    def contains_assert(self, value, response, status_code):
+    def assert_result(self, expected, response, status_code):
         """
-        字符串包含断言模式，断言预期结果的字符串是否包含在接口的响应信息中
-        :param value: 预期结果，yaml文件的预期结果值
-        :param response: 接口实际响应结果
-        :param status_code: 响应状态码
-        :return: 返回结果的状态标识
+        断言，通过断言all_flag标记，all_flag==0表示测试通过，否则为失败
+        :param expected: 预期结果
+        :param response: 实际响应结果
+        :param status_code: 响应code码
+        :return:
         """
-        # 断言状态标识，0成功，其他失败
-        flag = 0
-        for assert_key, assert_value in value.items():
-            if assert_key == "status_code":
-                if assert_value != status_code:
-                    flag += 1
-                    allure.attach(f"预期结果：{assert_value}\n实际结果：{status_code}", '响应代码断言结果:失败',
-                                  attachment_type=allure.attachment_type.TEXT)
-                    logs.error("contains断言失败：接口返回码【%s】不等于【%s】" % (status_code, assert_value))
-            else:
-&gt;               resp_list = jsonpath.jsonpath(response, "$..%s" % assert_key)
-                            ^^^^^^^^^^^^^^^^^
-E               AttributeError: module 'jsonpath' has no attribute 'jsonpath'. Did you mean: 'JSONPath'?
-
-common\assertions.py:39: AttributeError
-
-During handling of the above exception, another exception occurred:
-
-    @pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
+        all_flag = 0
         try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-            RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-        except Exception as e:
-            logs.error(f'登录接口出现异常，导致后续接口无法继续运行，请检查程序！，{e}')
-&gt;           exit()
-E           SystemExit: None
+            logs.info("yaml文件预期结果：%s" % expected)
+            # logs.info("实际结果：%s" % response)
+            # all_flag = 0
+            for yq in expected:
+                for key, value in yq.items():
+                    if key == "contains":
+                        flag = self.contains_assert(value, response, status_code)
+                        all_flag = all_flag + flag
+                    elif key == "eq":
+                        flag = self.equal_assert(value, response)
+                        all_flag = all_flag + flag
+                    elif key == 'ne':
+                        flag = self.not_equal_assert(value, response)
+                        all_flag = all_flag + flag
+                    elif key == 'rv':
+                        flag = self.assert_response_any(actual_results=response, expected_results=value)
+                        all_flag = all_flag + flag
+                    elif key == 'db':
+                        flag = self.assert_mysql_data(value)
+                        all_flag = all_flag + flag
+                    else:
+                        logs.error("不支持此种断言方式")
+    
+        except Exception as exceptions:
+            logs.error('接口断言异常，请检查yaml预期结果值是否正确填写!')
+            raise exceptions
+    
+        if all_flag == 0:
+            logs.info("测试成功")
+            assert True
+        else:
+            logs.error("测试失败")
+&gt;           assert False
+                   ^^^^^
+E           AssertionError
 
-testcase\conftest.py:33: SystemExit</error></testcase><testcase classname="testcase.ProductManager.test_productList.TestLogin" name="test_get_product_detail[base_info0-testcase0]" time="0.046"><error message="failed on setup with &quot;SystemExit: None&quot;">@pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-&gt;           RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
+common\assertions.py:242: AssertionError</failure></testcase><testcase classname="testcase.easyjava_test.test_user.TestUserManagement" name="test_user_api[case_data9]" time="0.030"><failure message="AssertionError">self = &lt;test_user.TestUserManagement object at 0x000002B67932A5D0&gt;
+case_data = {'baseInfo': {'api_name': '用户状态变更测试', 'header': {'Content-Type': 'application/json'}, 'method': 'POST', 'url': 'http:/...'case_name': '将用户状态从禁用改为锁定', 'json': {'status': 2, 'userId': 1}, 'validation': [{'contains': {'status': 'success'}}]}]}
 
-testcase\conftest.py:30: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-base\apiutil.py:119: in specification_yaml
-    raise e
-base\apiutil.py:116: in specification_yaml
-    raise e
-base\apiutil.py:110: in specification_yaml
-    self.asserts.assert_result(validation, res_json, status_code)
-common\assertions.py:195: in assert_result
-    raise exceptions
-common\assertions.py:176: in assert_result
-    flag = self.contains_assert(value, response, status_code)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+    @pytest.mark.parametrize("case_data", get_testcase_yaml("testcase/easyjava_test/user.yaml"))
+    def test_user_api(self, case_data):
+        """
+        用户管理接口测试
+        """
+        # 检查数据结构并正确获取测试用例信息
+        if isinstance(case_data, list) and len(case_data) == 2:
+            # 框架转换后的格式 [base_info, test_case]
+            base_info = case_data[0]
+            test_case = case_data[1]
+        elif isinstance(case_data, dict) and 'baseInfo' in case_data:
+            # 原始YAML格式
+            base_info = case_data['baseInfo']
+            # 遍历所有测试用例
+            for test_case in case_data['testCase']:
+&gt;               self._run_test_case(base_info, test_case)
 
-self = &lt;common.assertions.Assertions object at 0x000001CAA70D0380&gt;
-value = {'msg_code': 200}
-response = {'error_code': None, 'msg': '登录成功', 'msg_code': 200, 'orgId': '4140913758110176843', ...}
+testcase\easyjava_test\test_user.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+testcase\easyjava_test\test_user.py:71: in _run_test_case
+    assertions.assert_result(test_case.get("validation", []), response_json, response.status_code)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;common.assertions.Assertions object at 0x000002B679401C50&gt;
+expected = [{'contains': {'status': 'success'}}]
+response = {'code': 500, 'data': None, 'info': '服务器返回错误，请联系管理员', 'status': 'error'}
 status_code = 200
 
-    def contains_assert(self, value, response, status_code):
+    def assert_result(self, expected, response, status_code):
         """
-        字符串包含断言模式，断言预期结果的字符串是否包含在接口的响应信息中
-        :param value: 预期结果，yaml文件的预期结果值
-        :param response: 接口实际响应结果
-        :param status_code: 响应状态码
-        :return: 返回结果的状态标识
+        断言，通过断言all_flag标记，all_flag==0表示测试通过，否则为失败
+        :param expected: 预期结果
+        :param response: 实际响应结果
+        :param status_code: 响应code码
+        :return:
         """
-        # 断言状态标识，0成功，其他失败
-        flag = 0
-        for assert_key, assert_value in value.items():
-            if assert_key == "status_code":
-                if assert_value != status_code:
-                    flag += 1
-                    allure.attach(f"预期结果：{assert_value}\n实际结果：{status_code}", '响应代码断言结果:失败',
-                                  attachment_type=allure.attachment_type.TEXT)
-                    logs.error("contains断言失败：接口返回码【%s】不等于【%s】" % (status_code, assert_value))
-            else:
-&gt;               resp_list = jsonpath.jsonpath(response, "$..%s" % assert_key)
-                            ^^^^^^^^^^^^^^^^^
-E               AttributeError: module 'jsonpath' has no attribute 'jsonpath'. Did you mean: 'JSONPath'?
-
-common\assertions.py:39: AttributeError
-
-During handling of the above exception, another exception occurred:
-
-    @pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
+        all_flag = 0
         try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-            RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-        except Exception as e:
-            logs.error(f'登录接口出现异常，导致后续接口无法继续运行，请检查程序！，{e}')
-&gt;           exit()
-E           SystemExit: None
-
-testcase\conftest.py:33: SystemExit</error></testcase><testcase classname="testcase.ProductManager.test_productList.TestLogin" name="test_commit_order[base_info0-testcase0]" time="0.033"><error message="failed on setup with &quot;SystemExit: None&quot;">@pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-&gt;           RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-
-testcase\conftest.py:30: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-base\apiutil.py:119: in specification_yaml
-    raise e
-base\apiutil.py:116: in specification_yaml
-    raise e
-base\apiutil.py:110: in specification_yaml
-    self.asserts.assert_result(validation, res_json, status_code)
-common\assertions.py:195: in assert_result
-    raise exceptions
-common\assertions.py:176: in assert_result
-    flag = self.contains_assert(value, response, status_code)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;common.assertions.Assertions object at 0x000001CAA70AF050&gt;
-value = {'msg_code': 200}
-response = {'error_code': None, 'msg': '登录成功', 'msg_code': 200, 'orgId': '4140913758110176843', ...}
-status_code = 200
-
-    def contains_assert(self, value, response, status_code):
-        """
-        字符串包含断言模式，断言预期结果的字符串是否包含在接口的响应信息中
-        :param value: 预期结果，yaml文件的预期结果值
-        :param response: 接口实际响应结果
-        :param status_code: 响应状态码
-        :return: 返回结果的状态标识
-        """
-        # 断言状态标识，0成功，其他失败
-        flag = 0
-        for assert_key, assert_value in value.items():
-            if assert_key == "status_code":
-                if assert_value != status_code:
-                    flag += 1
-                    allure.attach(f"预期结果：{assert_value}\n实际结果：{status_code}", '响应代码断言结果:失败',
-                                  attachment_type=allure.attachment_type.TEXT)
-                    logs.error("contains断言失败：接口返回码【%s】不等于【%s】" % (status_code, assert_value))
-            else:
-&gt;               resp_list = jsonpath.jsonpath(response, "$..%s" % assert_key)
-                            ^^^^^^^^^^^^^^^^^
-E               AttributeError: module 'jsonpath' has no attribute 'jsonpath'. Did you mean: 'JSONPath'?
-
-common\assertions.py:39: AttributeError
-
-During handling of the above exception, another exception occurred:
-
-    @pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-            RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-        except Exception as e:
-            logs.error(f'登录接口出现异常，导致后续接口无法继续运行，请检查程序！，{e}')
-&gt;           exit()
-E           SystemExit: None
-
-testcase\conftest.py:33: SystemExit</error></testcase><testcase classname="testcase.ProductManager.test_productList.TestLogin" name="test_order_pay[base_info0-testcase0]" time="0.050"><error message="failed on setup with &quot;SystemExit: None&quot;">@pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-&gt;           RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-
-testcase\conftest.py:30: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-base\apiutil.py:119: in specification_yaml
-    raise e
-base\apiutil.py:116: in specification_yaml
-    raise e
-base\apiutil.py:110: in specification_yaml
-    self.asserts.assert_result(validation, res_json, status_code)
-common\assertions.py:195: in assert_result
-    raise exceptions
-common\assertions.py:176: in assert_result
-    flag = self.contains_assert(value, response, status_code)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;common.assertions.Assertions object at 0x000001CAA6F3F350&gt;
-value = {'msg_code': 200}
-response = {'error_code': None, 'msg': '登录成功', 'msg_code': 200, 'orgId': '6140913758128971280', ...}
-status_code = 200
-
-    def contains_assert(self, value, response, status_code):
-        """
-        字符串包含断言模式，断言预期结果的字符串是否包含在接口的响应信息中
-        :param value: 预期结果，yaml文件的预期结果值
-        :param response: 接口实际响应结果
-        :param status_code: 响应状态码
-        :return: 返回结果的状态标识
-        """
-        # 断言状态标识，0成功，其他失败
-        flag = 0
-        for assert_key, assert_value in value.items():
-            if assert_key == "status_code":
-                if assert_value != status_code:
-                    flag += 1
-                    allure.attach(f"预期结果：{assert_value}\n实际结果：{status_code}", '响应代码断言结果:失败',
-                                  attachment_type=allure.attachment_type.TEXT)
-                    logs.error("contains断言失败：接口返回码【%s】不等于【%s】" % (status_code, assert_value))
-            else:
-&gt;               resp_list = jsonpath.jsonpath(response, "$..%s" % assert_key)
-                            ^^^^^^^^^^^^^^^^^
-E               AttributeError: module 'jsonpath' has no attribute 'jsonpath'. Did you mean: 'JSONPath'?
-
-common\assertions.py:39: AttributeError
-
-During handling of the above exception, another exception occurred:
-
-    @pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-            RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-        except Exception as e:
-            logs.error(f'登录接口出现异常，导致后续接口无法继续运行，请检查程序！，{e}')
-&gt;           exit()
-E           SystemExit: None
-
-testcase\conftest.py:33: SystemExit</error></testcase><testcase classname="testcase.Single interface.test_debug_api.TestUserManager" name="test_add_user[base_info0-testcase0]" time="0.047"><error message="failed on setup with &quot;SystemExit: None&quot;">@pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-&gt;           RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-
-testcase\conftest.py:30: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-base\apiutil.py:119: in specification_yaml
-    raise e
-base\apiutil.py:116: in specification_yaml
-    raise e
-base\apiutil.py:110: in specification_yaml
-    self.asserts.assert_result(validation, res_json, status_code)
-common\assertions.py:195: in assert_result
-    raise exceptions
-common\assertions.py:176: in assert_result
-    flag = self.contains_assert(value, response, status_code)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;common.assertions.Assertions object at 0x000001CAA71025D0&gt;
-value = {'msg_code': 200}
-response = {'error_code': None, 'msg': '登录成功', 'msg_code': 200, 'orgId': '4140913758110176843', ...}
-status_code = 200
-
-    def contains_assert(self, value, response, status_code):
-        """
-        字符串包含断言模式，断言预期结果的字符串是否包含在接口的响应信息中
-        :param value: 预期结果，yaml文件的预期结果值
-        :param response: 接口实际响应结果
-        :param status_code: 响应状态码
-        :return: 返回结果的状态标识
-        """
-        # 断言状态标识，0成功，其他失败
-        flag = 0
-        for assert_key, assert_value in value.items():
-            if assert_key == "status_code":
-                if assert_value != status_code:
-                    flag += 1
-                    allure.attach(f"预期结果：{assert_value}\n实际结果：{status_code}", '响应代码断言结果:失败',
-                                  attachment_type=allure.attachment_type.TEXT)
-                    logs.error("contains断言失败：接口返回码【%s】不等于【%s】" % (status_code, assert_value))
-            else:
-&gt;               resp_list = jsonpath.jsonpath(response, "$..%s" % assert_key)
-                            ^^^^^^^^^^^^^^^^^
-E               AttributeError: module 'jsonpath' has no attribute 'jsonpath'. Did you mean: 'JSONPath'?
-
-common\assertions.py:39: AttributeError
-
-During handling of the above exception, another exception occurred:
-
-    @pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-            RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-        except Exception as e:
-            logs.error(f'登录接口出现异常，导致后续接口无法继续运行，请检查程序！，{e}')
-&gt;           exit()
-E           SystemExit: None
-
-testcase\conftest.py:33: SystemExit</error></testcase><testcase classname="testcase.Single interface.test_debug_api.TestUserManager" name="test_add_user[base_info1-testcase1]" time="0.051"><error message="failed on setup with &quot;SystemExit: None&quot;">@pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-&gt;           RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-
-testcase\conftest.py:30: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-base\apiutil.py:119: in specification_yaml
-    raise e
-base\apiutil.py:116: in specification_yaml
-    raise e
-base\apiutil.py:110: in specification_yaml
-    self.asserts.assert_result(validation, res_json, status_code)
-common\assertions.py:195: in assert_result
-    raise exceptions
-common\assertions.py:176: in assert_result
-    flag = self.contains_assert(value, response, status_code)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;common.assertions.Assertions object at 0x000001CAA7101A90&gt;
-value = {'msg_code': 200}
-response = {'error_code': None, 'msg': '登录成功', 'msg_code': 200, 'orgId': '6140913758128971280', ...}
-status_code = 200
-
-    def contains_assert(self, value, response, status_code):
-        """
-        字符串包含断言模式，断言预期结果的字符串是否包含在接口的响应信息中
-        :param value: 预期结果，yaml文件的预期结果值
-        :param response: 接口实际响应结果
-        :param status_code: 响应状态码
-        :return: 返回结果的状态标识
-        """
-        # 断言状态标识，0成功，其他失败
-        flag = 0
-        for assert_key, assert_value in value.items():
-            if assert_key == "status_code":
-                if assert_value != status_code:
-                    flag += 1
-                    allure.attach(f"预期结果：{assert_value}\n实际结果：{status_code}", '响应代码断言结果:失败',
-                                  attachment_type=allure.attachment_type.TEXT)
-                    logs.error("contains断言失败：接口返回码【%s】不等于【%s】" % (status_code, assert_value))
-            else:
-&gt;               resp_list = jsonpath.jsonpath(response, "$..%s" % assert_key)
-                            ^^^^^^^^^^^^^^^^^
-E               AttributeError: module 'jsonpath' has no attribute 'jsonpath'. Did you mean: 'JSONPath'?
-
-common\assertions.py:39: AttributeError
-
-During handling of the above exception, another exception occurred:
-
-    @pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-            RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-        except Exception as e:
-            logs.error(f'登录接口出现异常，导致后续接口无法继续运行，请检查程序！，{e}')
-&gt;           exit()
-E           SystemExit: None
-
-testcase\conftest.py:33: SystemExit</error></testcase><testcase classname="testcase.Single interface.test_debug_api.TestUserManager" name="test_add_user[base_info2-testcase2]" time="0.026"><error message="failed on setup with &quot;SystemExit: None&quot;">@pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-&gt;           RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-
-testcase\conftest.py:30: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-base\apiutil.py:119: in specification_yaml
-    raise e
-base\apiutil.py:116: in specification_yaml
-    raise e
-base\apiutil.py:110: in specification_yaml
-    self.asserts.assert_result(validation, res_json, status_code)
-common\assertions.py:195: in assert_result
-    raise exceptions
-common\assertions.py:176: in assert_result
-    flag = self.contains_assert(value, response, status_code)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;common.assertions.Assertions object at 0x000001CAA70F8D70&gt;
-value = {'msg_code': 200}
-response = {'error_code': None, 'msg': '登录成功', 'msg_code': 200, 'orgId': '4140913758110176843', ...}
-status_code = 200
-
-    def contains_assert(self, value, response, status_code):
-        """
-        字符串包含断言模式，断言预期结果的字符串是否包含在接口的响应信息中
-        :param value: 预期结果，yaml文件的预期结果值
-        :param response: 接口实际响应结果
-        :param status_code: 响应状态码
-        :return: 返回结果的状态标识
-        """
-        # 断言状态标识，0成功，其他失败
-        flag = 0
-        for assert_key, assert_value in value.items():
-            if assert_key == "status_code":
-                if assert_value != status_code:
-                    flag += 1
-                    allure.attach(f"预期结果：{assert_value}\n实际结果：{status_code}", '响应代码断言结果:失败',
-                                  attachment_type=allure.attachment_type.TEXT)
-                    logs.error("contains断言失败：接口返回码【%s】不等于【%s】" % (status_code, assert_value))
-            else:
-&gt;               resp_list = jsonpath.jsonpath(response, "$..%s" % assert_key)
-                            ^^^^^^^^^^^^^^^^^
-E               AttributeError: module 'jsonpath' has no attribute 'jsonpath'. Did you mean: 'JSONPath'?
-
-common\assertions.py:39: AttributeError
-
-During handling of the above exception, another exception occurred:
-
-    @pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-            RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-        except Exception as e:
-            logs.error(f'登录接口出现异常，导致后续接口无法继续运行，请检查程序！，{e}')
-&gt;           exit()
-E           SystemExit: None
-
-testcase\conftest.py:33: SystemExit</error></testcase><testcase classname="testcase.Single interface.test_debug_api.TestUserManager" name="test_add_user[base_info3-testcase3]" time="0.024"><error message="failed on setup with &quot;SystemExit: None&quot;">@pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-&gt;           RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-
-testcase\conftest.py:30: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-base\apiutil.py:119: in specification_yaml
-    raise e
-base\apiutil.py:116: in specification_yaml
-    raise e
-base\apiutil.py:110: in specification_yaml
-    self.asserts.assert_result(validation, res_json, status_code)
-common\assertions.py:195: in assert_result
-    raise exceptions
-common\assertions.py:176: in assert_result
-    flag = self.contains_assert(value, response, status_code)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;common.assertions.Assertions object at 0x000001CAA6FE7230&gt;
-value = {'msg_code': 200}
-response = {'error_code': None, 'msg': '登录成功', 'msg_code': 200, 'orgId': '6140913758128971280', ...}
-status_code = 200
-
-    def contains_assert(self, value, response, status_code):
-        """
-        字符串包含断言模式，断言预期结果的字符串是否包含在接口的响应信息中
-        :param value: 预期结果，yaml文件的预期结果值
-        :param response: 接口实际响应结果
-        :param status_code: 响应状态码
-        :return: 返回结果的状态标识
-        """
-        # 断言状态标识，0成功，其他失败
-        flag = 0
-        for assert_key, assert_value in value.items():
-            if assert_key == "status_code":
-                if assert_value != status_code:
-                    flag += 1
-                    allure.attach(f"预期结果：{assert_value}\n实际结果：{status_code}", '响应代码断言结果:失败',
-                                  attachment_type=allure.attachment_type.TEXT)
-                    logs.error("contains断言失败：接口返回码【%s】不等于【%s】" % (status_code, assert_value))
-            else:
-&gt;               resp_list = jsonpath.jsonpath(response, "$..%s" % assert_key)
-                            ^^^^^^^^^^^^^^^^^
-E               AttributeError: module 'jsonpath' has no attribute 'jsonpath'. Did you mean: 'JSONPath'?
-
-common\assertions.py:39: AttributeError
-
-During handling of the above exception, another exception occurred:
-
-    @pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-            RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-        except Exception as e:
-            logs.error(f'登录接口出现异常，导致后续接口无法继续运行，请检查程序！，{e}')
-&gt;           exit()
-E           SystemExit: None
-
-testcase\conftest.py:33: SystemExit</error></testcase><testcase classname="testcase.Single interface.test_debug_api.TestUserManager" name="test_update_user[base_info0-testcase0]" time="0.026"><error message="failed on setup with &quot;SystemExit: None&quot;">@pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-&gt;           RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-
-testcase\conftest.py:30: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-base\apiutil.py:119: in specification_yaml
-    raise e
-base\apiutil.py:116: in specification_yaml
-    raise e
-base\apiutil.py:110: in specification_yaml
-    self.asserts.assert_result(validation, res_json, status_code)
-common\assertions.py:195: in assert_result
-    raise exceptions
-common\assertions.py:176: in assert_result
-    flag = self.contains_assert(value, response, status_code)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;common.assertions.Assertions object at 0x000001CAA71B2EA0&gt;
-value = {'msg_code': 200}
-response = {'error_code': None, 'msg': '登录成功', 'msg_code': 200, 'orgId': '4140913758110176843', ...}
-status_code = 200
-
-    def contains_assert(self, value, response, status_code):
-        """
-        字符串包含断言模式，断言预期结果的字符串是否包含在接口的响应信息中
-        :param value: 预期结果，yaml文件的预期结果值
-        :param response: 接口实际响应结果
-        :param status_code: 响应状态码
-        :return: 返回结果的状态标识
-        """
-        # 断言状态标识，0成功，其他失败
-        flag = 0
-        for assert_key, assert_value in value.items():
-            if assert_key == "status_code":
-                if assert_value != status_code:
-                    flag += 1
-                    allure.attach(f"预期结果：{assert_value}\n实际结果：{status_code}", '响应代码断言结果:失败',
-                                  attachment_type=allure.attachment_type.TEXT)
-                    logs.error("contains断言失败：接口返回码【%s】不等于【%s】" % (status_code, assert_value))
-            else:
-&gt;               resp_list = jsonpath.jsonpath(response, "$..%s" % assert_key)
-                            ^^^^^^^^^^^^^^^^^
-E               AttributeError: module 'jsonpath' has no attribute 'jsonpath'. Did you mean: 'JSONPath'?
-
-common\assertions.py:39: AttributeError
-
-During handling of the above exception, another exception occurred:
-
-    @pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-            RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-        except Exception as e:
-            logs.error(f'登录接口出现异常，导致后续接口无法继续运行，请检查程序！，{e}')
-&gt;           exit()
-E           SystemExit: None
-
-testcase\conftest.py:33: SystemExit</error></testcase><testcase classname="testcase.Single interface.test_debug_api.TestUserManager" name="test_delete_user[base_info0-testcase0]" time="0.044"><error message="failed on setup with &quot;SystemExit: None&quot;">@pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-&gt;           RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-
-testcase\conftest.py:30: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-base\apiutil.py:119: in specification_yaml
-    raise e
-base\apiutil.py:116: in specification_yaml
-    raise e
-base\apiutil.py:110: in specification_yaml
-    self.asserts.assert_result(validation, res_json, status_code)
-common\assertions.py:195: in assert_result
-    raise exceptions
-common\assertions.py:176: in assert_result
-    flag = self.contains_assert(value, response, status_code)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;common.assertions.Assertions object at 0x000001CAA6F6DC10&gt;
-value = {'msg_code': 200}
-response = {'error_code': None, 'msg': '登录成功', 'msg_code': 200, 'orgId': '4140913758110176843', ...}
-status_code = 200
-
-    def contains_assert(self, value, response, status_code):
-        """
-        字符串包含断言模式，断言预期结果的字符串是否包含在接口的响应信息中
-        :param value: 预期结果，yaml文件的预期结果值
-        :param response: 接口实际响应结果
-        :param status_code: 响应状态码
-        :return: 返回结果的状态标识
-        """
-        # 断言状态标识，0成功，其他失败
-        flag = 0
-        for assert_key, assert_value in value.items():
-            if assert_key == "status_code":
-                if assert_value != status_code:
-                    flag += 1
-                    allure.attach(f"预期结果：{assert_value}\n实际结果：{status_code}", '响应代码断言结果:失败',
-                                  attachment_type=allure.attachment_type.TEXT)
-                    logs.error("contains断言失败：接口返回码【%s】不等于【%s】" % (status_code, assert_value))
-            else:
-&gt;               resp_list = jsonpath.jsonpath(response, "$..%s" % assert_key)
-                            ^^^^^^^^^^^^^^^^^
-E               AttributeError: module 'jsonpath' has no attribute 'jsonpath'. Did you mean: 'JSONPath'?
-
-common\assertions.py:39: AttributeError
-
-During handling of the above exception, another exception occurred:
-
-    @pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-            RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-        except Exception as e:
-            logs.error(f'登录接口出现异常，导致后续接口无法继续运行，请检查程序！，{e}')
-&gt;           exit()
-E           SystemExit: None
-
-testcase\conftest.py:33: SystemExit</error></testcase><testcase classname="testcase.Single interface.test_debug_api.TestUserManager" name="test_delete_user[base_info1-testcase1]" time="0.026"><error message="failed on setup with &quot;SystemExit: None&quot;">@pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-&gt;           RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-
-testcase\conftest.py:30: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-base\apiutil.py:119: in specification_yaml
-    raise e
-base\apiutil.py:116: in specification_yaml
-    raise e
-base\apiutil.py:110: in specification_yaml
-    self.asserts.assert_result(validation, res_json, status_code)
-common\assertions.py:195: in assert_result
-    raise exceptions
-common\assertions.py:176: in assert_result
-    flag = self.contains_assert(value, response, status_code)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;common.assertions.Assertions object at 0x000001CAA6F6CC50&gt;
-value = {'msg_code': 200}
-response = {'error_code': None, 'msg': '登录成功', 'msg_code': 200, 'orgId': '6140913758128971280', ...}
-status_code = 200
-
-    def contains_assert(self, value, response, status_code):
-        """
-        字符串包含断言模式，断言预期结果的字符串是否包含在接口的响应信息中
-        :param value: 预期结果，yaml文件的预期结果值
-        :param response: 接口实际响应结果
-        :param status_code: 响应状态码
-        :return: 返回结果的状态标识
-        """
-        # 断言状态标识，0成功，其他失败
-        flag = 0
-        for assert_key, assert_value in value.items():
-            if assert_key == "status_code":
-                if assert_value != status_code:
-                    flag += 1
-                    allure.attach(f"预期结果：{assert_value}\n实际结果：{status_code}", '响应代码断言结果:失败',
-                                  attachment_type=allure.attachment_type.TEXT)
-                    logs.error("contains断言失败：接口返回码【%s】不等于【%s】" % (status_code, assert_value))
-            else:
-&gt;               resp_list = jsonpath.jsonpath(response, "$..%s" % assert_key)
-                            ^^^^^^^^^^^^^^^^^
-E               AttributeError: module 'jsonpath' has no attribute 'jsonpath'. Did you mean: 'JSONPath'?
-
-common\assertions.py:39: AttributeError
-
-During handling of the above exception, another exception occurred:
-
-    @pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-            RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-        except Exception as e:
-            logs.error(f'登录接口出现异常，导致后续接口无法继续运行，请检查程序！，{e}')
-&gt;           exit()
-E           SystemExit: None
-
-testcase\conftest.py:33: SystemExit</error></testcase><testcase classname="testcase.Single interface.test_debug_api.TestUserManager" name="test_delete_user[base_info2-testcase2]" time="0.041"><error message="failed on setup with &quot;SystemExit: None&quot;">@pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-&gt;           RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-
-testcase\conftest.py:30: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-base\apiutil.py:119: in specification_yaml
-    raise e
-base\apiutil.py:116: in specification_yaml
-    raise e
-base\apiutil.py:110: in specification_yaml
-    self.asserts.assert_result(validation, res_json, status_code)
-common\assertions.py:195: in assert_result
-    raise exceptions
-common\assertions.py:176: in assert_result
-    flag = self.contains_assert(value, response, status_code)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;common.assertions.Assertions object at 0x000001CAA71A8B50&gt;
-value = {'msg_code': 200}
-response = {'error_code': None, 'msg': '登录成功', 'msg_code': 200, 'orgId': '6140913758128971280', ...}
-status_code = 200
-
-    def contains_assert(self, value, response, status_code):
-        """
-        字符串包含断言模式，断言预期结果的字符串是否包含在接口的响应信息中
-        :param value: 预期结果，yaml文件的预期结果值
-        :param response: 接口实际响应结果
-        :param status_code: 响应状态码
-        :return: 返回结果的状态标识
-        """
-        # 断言状态标识，0成功，其他失败
-        flag = 0
-        for assert_key, assert_value in value.items():
-            if assert_key == "status_code":
-                if assert_value != status_code:
-                    flag += 1
-                    allure.attach(f"预期结果：{assert_value}\n实际结果：{status_code}", '响应代码断言结果:失败',
-                                  attachment_type=allure.attachment_type.TEXT)
-                    logs.error("contains断言失败：接口返回码【%s】不等于【%s】" % (status_code, assert_value))
-            else:
-&gt;               resp_list = jsonpath.jsonpath(response, "$..%s" % assert_key)
-                            ^^^^^^^^^^^^^^^^^
-E               AttributeError: module 'jsonpath' has no attribute 'jsonpath'. Did you mean: 'JSONPath'?
-
-common\assertions.py:39: AttributeError
-
-During handling of the above exception, another exception occurred:
-
-    @pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-            RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-        except Exception as e:
-            logs.error(f'登录接口出现异常，导致后续接口无法继续运行，请检查程序！，{e}')
-&gt;           exit()
-E           SystemExit: None
-
-testcase\conftest.py:33: SystemExit</error></testcase><testcase classname="testcase.Single interface.test_debug_api.TestUserManager" name="test_delete_user[base_info3-testcase3]" time="0.030"><error message="failed on setup with &quot;SystemExit: None&quot;">@pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-&gt;           RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-
-testcase\conftest.py:30: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-base\apiutil.py:119: in specification_yaml
-    raise e
-base\apiutil.py:116: in specification_yaml
-    raise e
-base\apiutil.py:110: in specification_yaml
-    self.asserts.assert_result(validation, res_json, status_code)
-common\assertions.py:195: in assert_result
-    raise exceptions
-common\assertions.py:176: in assert_result
-    flag = self.contains_assert(value, response, status_code)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;common.assertions.Assertions object at 0x000001CAA71A9180&gt;
-value = {'msg_code': 200}
-response = {'error_code': None, 'msg': '登录成功', 'msg_code': 200, 'orgId': '6140913758128971280', ...}
-status_code = 200
-
-    def contains_assert(self, value, response, status_code):
-        """
-        字符串包含断言模式，断言预期结果的字符串是否包含在接口的响应信息中
-        :param value: 预期结果，yaml文件的预期结果值
-        :param response: 接口实际响应结果
-        :param status_code: 响应状态码
-        :return: 返回结果的状态标识
-        """
-        # 断言状态标识，0成功，其他失败
-        flag = 0
-        for assert_key, assert_value in value.items():
-            if assert_key == "status_code":
-                if assert_value != status_code:
-                    flag += 1
-                    allure.attach(f"预期结果：{assert_value}\n实际结果：{status_code}", '响应代码断言结果:失败',
-                                  attachment_type=allure.attachment_type.TEXT)
-                    logs.error("contains断言失败：接口返回码【%s】不等于【%s】" % (status_code, assert_value))
-            else:
-&gt;               resp_list = jsonpath.jsonpath(response, "$..%s" % assert_key)
-                            ^^^^^^^^^^^^^^^^^
-E               AttributeError: module 'jsonpath' has no attribute 'jsonpath'. Did you mean: 'JSONPath'?
-
-common\assertions.py:39: AttributeError
-
-During handling of the above exception, another exception occurred:
-
-    @pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-            RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-        except Exception as e:
-            logs.error(f'登录接口出现异常，导致后续接口无法继续运行，请检查程序！，{e}')
-&gt;           exit()
-E           SystemExit: None
-
-testcase\conftest.py:33: SystemExit</error></testcase><testcase classname="testcase.Single interface.test_debug_api.TestUserManager" name="test_query_user[base_info0-testcase0]" time="0.052"><error message="failed on setup with &quot;SystemExit: None&quot;">@pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-&gt;           RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-
-testcase\conftest.py:30: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-base\apiutil.py:119: in specification_yaml
-    raise e
-base\apiutil.py:116: in specification_yaml
-    raise e
-base\apiutil.py:110: in specification_yaml
-    self.asserts.assert_result(validation, res_json, status_code)
-common\assertions.py:195: in assert_result
-    raise exceptions
-common\assertions.py:176: in assert_result
-    flag = self.contains_assert(value, response, status_code)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-self = &lt;common.assertions.Assertions object at 0x000001CAA7179D10&gt;
-value = {'msg_code': 200}
-response = {'error_code': None, 'msg': '登录成功', 'msg_code': 200, 'orgId': '4140913758110176843', ...}
-status_code = 200
-
-    def contains_assert(self, value, response, status_code):
-        """
-        字符串包含断言模式，断言预期结果的字符串是否包含在接口的响应信息中
-        :param value: 预期结果，yaml文件的预期结果值
-        :param response: 接口实际响应结果
-        :param status_code: 响应状态码
-        :return: 返回结果的状态标识
-        """
-        # 断言状态标识，0成功，其他失败
-        flag = 0
-        for assert_key, assert_value in value.items():
-            if assert_key == "status_code":
-                if assert_value != status_code:
-                    flag += 1
-                    allure.attach(f"预期结果：{assert_value}\n实际结果：{status_code}", '响应代码断言结果:失败',
-                                  attachment_type=allure.attachment_type.TEXT)
-                    logs.error("contains断言失败：接口返回码【%s】不等于【%s】" % (status_code, assert_value))
-            else:
-&gt;               resp_list = jsonpath.jsonpath(response, "$..%s" % assert_key)
-                            ^^^^^^^^^^^^^^^^^
-E               AttributeError: module 'jsonpath' has no attribute 'jsonpath'. Did you mean: 'JSONPath'?
-
-common\assertions.py:39: AttributeError
-
-During handling of the above exception, another exception occurred:
-
-    @pytest.fixture(scope='session', autouse=True)
-    @allure.story("登录")
-    def system_login():
-        try:
-            api_info = get_testcase_yaml('./data/loginName.yaml')
-            RequestBase().specification_yaml(api_info[0][0], api_info[0][1])
-        except Exception as e:
-            logs.error(f'登录接口出现异常，导致后续接口无法继续运行，请检查程序！，{e}')
-&gt;           exit()
-E           SystemExit: None
-
-testcase\conftest.py:33: SystemExit</error></testcase></testsuite></testsuites>
+            logs.info("yaml文件预期结果：%s" % expected)
+            # logs.info("实际结果：%s" % response)
+            # all_flag = 0
+            for yq in expected:
+                for key, value in yq.items():
+                    if key == "contains":
+                        flag = self.contains_assert(value, response, status_code)
+                        all_flag = all_flag + flag
+                    elif key == "eq":
+                        flag = self.equal_assert(value, response)
+                        all_flag = all_flag + flag
+                    elif key == 'ne':
+                        flag = self.not_equal_assert(value, response)
+                        all_flag = all_flag + flag
+                    elif key == 'rv':
+                        flag = self.assert_response_any(actual_results=response, expected_results=value)
+                        all_flag = all_flag + flag
+                    elif key == 'db':
+                        flag = self.assert_mysql_data(value)
+                        all_flag = all_flag + flag
+                    else:
+                        logs.error("不支持此种断言方式")
+    
+        except Exception as exceptions:
+            logs.error('接口断言异常，请检查yaml预期结果值是否正确填写!')
+            raise exceptions
+    
+        if all_flag == 0:
+            logs.info("测试成功")
+            assert True
+        else:
+            logs.error("测试失败")
+&gt;           assert False
+                   ^^^^^
+E           AssertionError
+
+common\assertions.py:242: AssertionError</failure></testcase></testsuite></testsuites>
